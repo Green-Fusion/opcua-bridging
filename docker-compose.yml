@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  client:
+    build: client
+    environment:
+      - WAIT_HOSTS=cloud:4840,plc:4840
+  cloud:
+    build: cloud
+    expose:
+      - 4840
+    environment:
+      - WAIT_HOSTS=plc:4840
+  plc:
+    build: PLC
+    expose:
+      - 4840

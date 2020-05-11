@@ -9,8 +9,8 @@ from cloud.subscription_handler import SubscriptionHandler
 logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger('asyncua')
 
-PLC_url = "opc.tcp://0.0.0.0:4840/freeopcua/server/"
-cloud_url = "opc.tcp://0.0.0.0:4841/freeopcua/server/"
+PLC_url = "opc.tcp://plc:4840/freeopcua/server/"
+cloud_url = "opc.tcp://cloud:4840/freeopcua/server/"
 
 
 async def main():
