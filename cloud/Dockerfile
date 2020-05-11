@@ -15,4 +15,4 @@ RUN chmod +x /wait
 
 WORKDIR /cloud
 
-CMD /wait && python cloud/forwardy_lad.py
+CMD /wait && python cloud/forwarding_service.py

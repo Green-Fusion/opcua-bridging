@@ -10,7 +10,11 @@ services:
       - 4840
     environment:
       - WAIT_HOSTS=plc:4840
+    ports:
+      - '4839:4840'
   plc:
     build: PLC
     expose:
       - 4840
+    ports:
+      - '4840:4840'
