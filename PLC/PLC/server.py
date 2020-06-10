@@ -3,6 +3,10 @@ import asyncio
 
 from asyncua import ua, Server
 from asyncua.common.methods import uamethod
+from asyncua.crypto.certificate_handler import CertificateHandler
+from asyncua.server.user_managers import CertificateUserManager
+from asyncua.server.users import UserRole
+
 from PLC.data_fetcher import TimeSeriesStorage
 
 logging.basicConfig(level=logging.INFO)
@@ -11,9 +15,20 @@ _logger = logging.getLogger('asyncua')
 
 async def main():
     # setup our server
-    server = Server()
+    cert_handler = CertificateHandler()
+    await cert_handler.trust_certificate("/credentials/cloud_cert.der",
+                                         user_role=UserRole.Admin, label='cloud')
+    await cert_handler.trust_certificate("/credentials/user_admin_cert.der",
+                                         user_role=UserRole.User, label='end_client')
+
+    server = Server(user_manager=CertificateUserManager(cert_handler))
     await server.init()
     server.set_endpoint('opc.tcp://0.0.0.0:4840/freeopcua/server/')
+    server.set_security_policy([ua.SecurityPolicyType.Basic256Sha256_SignAndEncrypt],
+                               certificate_handler=cert_handler)
+
+    await server.load_certificate("/credentials/PLC_cert.der")
+    await server.load_private_key("/credentials/PLC_private_key.pem")
 
     idx = 0
 
