@@ -1,11 +1,15 @@
 version: "3.8"
 services:
   client:
-    build: client
+    build:
+      dockerfile: client/Dockerfile
+      context: .
     environment:
       - WAIT_HOSTS=cloud:4840,plc:4840
   cloud:
-    build: cloud
+    build:
+      dockerfile: cloud/Dockerfile
+      context: .
     expose:
       - 4840
     environment:
@@ -13,7 +17,9 @@ services:
     ports:
       - '4839:4840'
   plc:
-    build: PLC
+    build:
+      dockerfile: PLC/Dockerfile
+      context: .
     expose:
       - 4840
     ports:
