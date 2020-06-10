@@ -21,8 +21,8 @@ async def main():
     await client.connect()
     obj_1 = await server.nodes.objects.add_object(0, 'ExamplePLC')
     obj_2 = await server.nodes.objects.add_object(1, 'TSPLC')
-    client_node_1 = await client.nodes.objects.get_child(['0:MyObject'])
-    client_node_2 = await client.nodes.objects.get_child(['0:TimeSeries'])
+    node_1_client = await client.nodes.objects.get_child(['0:MyObject'])
+    node_2_client = await client.nodes.objects.get_child(['0:TimeSeries'])
 
     server.set_endpoint(cloud_url)
     client_var = await client.nodes.root.get_child(['0:Objects', '0:MyObject', '0:MyVariable'])
@@ -30,8 +30,8 @@ async def main():
 
     subscription = await client.create_subscription(5, handler)
 
-    await clone_and_subscribe(client_node_1, obj_1, handler, subscription, client)
-    await clone_and_subscribe(client_node_2, obj_2, handler, subscription, client)
+    await clone_and_subscribe(node_1_client, obj_1, handler, subscription, client)
+    await clone_and_subscribe(node_2_client, obj_2, handler, subscription, client)
     nodes = [client_var]
     async with server:
         # await subscription.subscribe_data_change(nodes)
