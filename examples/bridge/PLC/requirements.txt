@@ -1,0 +1,3 @@
+git+https://github.com/joeyfaulkner/opcua-asyncio@feature/subscribe_to_write
+numpy
+pyyaml

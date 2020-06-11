@@ -1,10 +1,23 @@
+from asyncua_utils.nodes import browse_nodes, clone_nodes
 import logging
 from asyncua.common.callback import CallbackType
 from asyncua import Server, Client
-import asyncio
 
 
 _logger = logging.getLogger('asyncua')
+
+
+def subscribe_with_handler_from_list(sub_handler, mapping_list):
+    for server_id, client_id in mapping_list:
+        sub_handler.add_connection(server_id, client_id)
+
+
+async def clone_and_subscribe(client_node, server_node, sub_handler, subscription_obj, client):
+    node_dict = await browse_nodes(client_node)
+    mapping_list = await clone_nodes(node_dict, server_node)
+    subscribe_with_handler_from_list(sub_handler, mapping_list)
+    nodes = [client.get_node(srv_node_id) for srv_node_id, _ in mapping_list]
+    await subscription_obj.subscribe_data_change(nodes)
 
 
 class SubscriptionHandler:
@@ -49,7 +62,6 @@ class SubscriptionHandler:
         user = event.user
         if user.name is not None:
             for idx in range(len(response_params)):
-                _logger.warning('working pt2 !')
                 if response_params[idx].is_good():
                     write_params = request_params.NodesToWrite[idx]
                     source_node_id = write_params.NodeId.to_string()
@@ -59,6 +71,5 @@ class SubscriptionHandler:
                     await val.set_value(value)
 
     def subscribe_to_writes(self):
-        _logger.warning('at least this is working')
         # need some way of awaiting this
         self._server.subscribe_server_callback(CallbackType.WritePerformed, self.inverse_forwarding)

@@ -1,0 +1,10 @@
+server_url: opc.tcp://plc:4840/freeopcua/server/
+server_certificate_path: /credentials/PLC_cert.der
+server_private_key_path: /credentials/PLC_private_key.pem
+certificates:
+  - name: cloud
+    role: admin
+    certificate_path: /credentials/cloud_cert.der
+  - name: end_user
+    role: admin
+    certificate_path: /credentials/user_admin_cert.der

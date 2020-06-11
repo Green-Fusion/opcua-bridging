@@ -2,14 +2,14 @@ version: "3.8"
 services:
   client:
     build:
-      dockerfile: client/Dockerfile
-      context: .
+      dockerfile: examples/bridge/client/Dockerfile
+      context: ../..
     environment:
       - WAIT_HOSTS=cloud:4840,plc:4840
   cloud:
     build:
-      dockerfile: cloud/Dockerfile
-      context: .
+      dockerfile: examples/bridge/cloud/Dockerfile
+      context: ../..
     expose:
       - 4840
     environment:
@@ -18,8 +18,8 @@ services:
       - '4839:4840'
   plc:
     build:
-      dockerfile: PLC/Dockerfile
-      context: .
+      dockerfile: examples/bridge/PLC/Dockerfile
+      context: ../..
     expose:
       - 4840
     ports:

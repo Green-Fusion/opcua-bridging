@@ -48,16 +48,3 @@ async def clone_nodes(nodes_dict, base_object, idx=0):
     else:
         raise NotImplementedError
     return mapping_list
-
-
-def subscribe_with_handler_from_list(sub_handler, mapping_list):
-    for server_id, client_id in mapping_list:
-        sub_handler.add_connection(server_id, client_id)
-
-
-async def clone_and_subscribe(client_node, server_node, sub_handler, subscription_obj, client):
-    node_dict = await browse_nodes(client_node)
-    mapping_list = await clone_nodes(node_dict, server_node)
-    subscribe_with_handler_from_list(sub_handler, mapping_list)
-    nodes = [client.get_node(srv_node_id) for srv_node_id, _ in mapping_list]
-    await subscription_obj.subscribe_data_change(nodes)
