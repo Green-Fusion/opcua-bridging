@@ -1,15 +1,12 @@
 import logging
 import asyncio
 
-from asyncua import Server, Client
+from asyncua import Client
 
-from cloud.node_walking import clone_and_subscribe
-from cloud.subscription_handler import SubscriptionHandler
-from asyncua.crypto.certificate_handler import CertificateHandler
+from asyncua_utils.bridge import clone_and_subscribe
+from asyncua_utils.bridge.subscription import SubscriptionHandler
 from asyncua.crypto.security_policies import SecurityPolicyBasic256Sha256
-from asyncua.server.users import UserRole
-from asyncua.server.user_managers import CertificateUserManager
-from asyncua import ua
+from asyncua_utils.server import server_from_yaml
 
 logging.basicConfig(level=logging.WARNING)
 _logger = logging.getLogger('asyncua')
@@ -20,19 +17,7 @@ cloud_url = "opc.tcp://cloud:4840/freeopcua/server/"
 
 async def main():
     # setup our serverclone_and_subscribe(client_node, server_node, sub_handler)
-    certificate_handler = CertificateHandler()
-    await certificate_handler.trust_certificate('/credentials/user_admin_cert.der', label='user',
-                                                user_role=UserRole.Admin)
-
-    server = Server(user_manager=CertificateUserManager(certificate_handler))
-    await server.init()
-    server.set_endpoint(cloud_url)
-    server.set_security_policy([ua.SecurityPolicyType.Basic256Sha256_SignAndEncrypt],
-                               certificate_handler=certificate_handler)
-
-    await server.load_certificate("/credentials/cloud_cert.der")
-    await server.load_private_key("/credentials/cloud_private_key.pem")
-
+    server = await server_from_yaml('cloud_server_config.yaml')
 
     client = Client(url=PLC_url)
     await client.set_security(
@@ -42,7 +27,6 @@ async def main():
         server_certificate_path='/credentials/PLC_cert.der'
     )
     await client.connect()
-
 
     obj_1 = await server.nodes.objects.add_object(0, 'ExamplePLC')
     obj_2 = await server.nodes.objects.add_object(1, 'TSPLC')
