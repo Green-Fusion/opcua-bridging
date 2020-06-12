@@ -65,23 +65,3 @@ async def test_forwarding_to_PLC(client_PLC, client_cloud):
                 PLC_val = await obj_PLC.get_value()
                 _logger.info(f"PLC has value {PLC_val} and cloud has value {cloud_val}")
                 assert abs(PLC_val - cloud_val) < 0.3
-
-# async def main():
-#
-#
-#
-#     await client_PLC.connect()
-#     await client_cloud.connect()
-#     obj_PLC = await client_PLC.nodes.root.get_child(['0:Objects', '0:MyObject', '0:MyVariable'])
-#     obj_cloud = await client_cloud.nodes.root.get_child(['0:Objects', '0:ExamplePLC', '0:MyObject', '0:MyVariable'])
-#
-#     for i in range(10):
-#         await asyncio.sleep(3)
-#         await obj_cloud.set_value(42)
-#         cloud_val = await obj_cloud.get_value()
-#         PLC_val = await obj_PLC.get_value()
-#         _logger.info(f"PLC has value {PLC_val} and cloud has value {cloud_val}")
-#         assert abs(PLC_val - cloud_val) < 0.3
-
-if __name__ == '__main__':
-    asyncio.run(main())
