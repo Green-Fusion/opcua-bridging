@@ -1,10 +1,12 @@
 import logging
 from asyncua import ua
+from asyncua.ua.uatypes import VariantType
+from asyncua.ua.uaprotocol_auto import NodeClass
 
 _logger = logging.getLogger('asyncua')
 
 
-async def browse_nodes(node):
+async def browse_nodes(node, to_export=False):
     """
     Build a nested node tree dict by recursion (filtered by OPC UA objects and variables).
     """
@@ -13,7 +15,7 @@ async def browse_nodes(node):
     for child in await node.get_children():
         if await child.read_node_class() in [ua.NodeClass.Object, ua.NodeClass.Variable]:
             children.append(
-                await browse_nodes(child)
+                await browse_nodes(child, to_export=to_export)
             )
     if node_class != ua.NodeClass.Variable:
         var_type = None
@@ -23,14 +25,26 @@ async def browse_nodes(node):
         except ua.UaError:
             _logger.warning('Node Variable Type could not be determined for %r', node)
             var_type = None
-    return {
+    output = {
         'id': node.nodeid.to_string(),
         'name': (await node.read_display_name()).Text,
         'cls': node_class.value,
-        'children': children,
         'type': var_type,
-        'node': node
     }
+
+    if not to_export:
+        output['node'] = node
+        output['children'] = children
+    else:
+        if len(children) != 0:
+            output['children'] = children
+        if output['type']:
+            output['type'] = VariantType(output['type']).name
+        if output['cls']:
+            output['cls'] = NodeClass(output['cls']).name
+        if output['cls'] == 'Variable':
+            output['current_value'] = await node.get_value()
+    return output
 
 
 async def clone_nodes(nodes_dict, base_object, idx=0):

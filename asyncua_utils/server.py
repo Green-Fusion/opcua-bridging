@@ -18,16 +18,17 @@ async def server_with_certificates(server_url, server_certificate_path, server_p
     """
     # setup our serverclone_and_subscribe(client_node, server_node, sub_handler)
     certificate_handler = CertificateUserManager()
-    for role_add in certificates:
-        certificate_path = role_add['certificate_path']
-        name = role_add['name']
-        role = role_add['role']
-        if role == 'admin':
-            await certificate_handler.add_admin(certificate_path=certificate_path, name=name)
-        elif role == 'user':
-            await certificate_handler.add_user(certificate_path=certificate_path, name=name)
-        else:
-            raise NotImplementedError
+    if certificates is not None:
+        for role_add in certificates:
+            certificate_path = role_add['certificate_path']
+            name = role_add['name']
+            role = role_add['role']
+            if role == 'admin':
+                await certificate_handler.add_admin(certificate_path=certificate_path, name=name)
+            elif role == 'user':
+                await certificate_handler.add_user(certificate_path=certificate_path, name=name)
+            else:
+                raise NotImplementedError
 
     server = Server(user_manager=certificate_handler)
     await server.init()

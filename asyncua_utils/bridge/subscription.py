@@ -2,6 +2,7 @@ from asyncua_utils.nodes import browse_nodes, clone_nodes
 import logging
 from asyncua.common.callback import CallbackType
 from asyncua import Server, Client
+import asyncua.ua.uaerrors
 
 
 _logger = logging.getLogger('asyncua')
@@ -73,3 +74,10 @@ class SubscriptionHandler:
     def subscribe_to_writes(self):
         # need some way of awaiting this
         self._server.subscribe_server_callback(CallbackType.WritePerformed, self.inverse_forwarding)
+
+    @staticmethod
+    async def _safe_set(node, value):
+        try:
+            await node.set_value(value)
+        except asyncua.ua.uaerrors._base.UaError:
+            _logger.warning('node failed to be set with value %s', value)
