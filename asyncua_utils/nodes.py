@@ -2,6 +2,7 @@ import logging
 from asyncua import ua
 from asyncua.ua.uatypes import VariantType
 from asyncua.ua.uaprotocol_auto import NodeClass
+from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid
 
 _logger = logging.getLogger('asyncua')
 
@@ -43,7 +44,10 @@ async def browse_nodes(node, to_export=False):
         if output['cls']:
             output['cls'] = NodeClass(output['cls']).name
         if output['cls'] == 'Variable':
-            output['current_value'] = await node.get_value()
+            try:
+                output['current_value'] = await node.get_value()
+            except (BadOutOfService, BadAttributeIdInvalid):
+                output['current_value'] = None
     return output
 
 

@@ -19,6 +19,9 @@ async def create_nested_node_dict(server_url, client_certificate=None, client_pr
 
 
 async def make_variable_dict(server_url, client_certificate=None, client_private_key=None):
+    sock = 'opc.tcp://'
+    if not server_url.startswith(sock):
+        server_url = sock + server_url
     nested_dict = await create_nested_node_dict(server_url, client_certificate, client_private_key)
     output_variables = []
     get_variables(nested_dict, output_variables=output_variables)
@@ -46,4 +49,8 @@ def get_variables(nested_dict, path='', output_variables=None):
 
 if __name__ == '__main__':
     import sys
-    asyncio.run(make_variable_dict(sys.argv[1], sys.argv[2], sys.argv[3]))
+    if len(sys.argv) == 2:
+        process = make_variable_dict(sys.argv[1])
+    else:
+        process = make_variable_dict(sys.argv[1], sys.argv[2], sys.argv[3])
+    asyncio.run(process)
