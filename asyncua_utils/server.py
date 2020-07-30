@@ -30,13 +30,15 @@ async def server_with_certificates(server_url, server_certificate_path, server_p
             else:
                 raise NotImplementedError
 
-    server = Server(user_manager=certificate_handler)
+        server = Server(user_manager=certificate_handler)
+    else:
+        server = Server()
     await server.init()
     server.set_endpoint(server_url)
-    server.set_security_policy([ua.SecurityPolicyType.Basic256Sha256_SignAndEncrypt])
+    # server.set_security_policy([ua.SecurityPolicyType.Basic256Sha256_SignAndEncrypt])
 
-    await server.load_certificate(server_certificate_path)
-    await server.load_private_key(server_private_key_path)
+    # await server.load_certificate(server_certificate_path)
+    # await server.load_private_key(server_private_key_path)
     return server, certificate_handler
 
 
