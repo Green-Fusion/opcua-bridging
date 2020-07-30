@@ -44,8 +44,8 @@ async def server_with_certificates(server_url, server_certificate_path, server_p
 
 async def server_from_yaml(yaml_path):
     out = yaml.safe_load(open(yaml_path, 'r'))
-    server, _ = await server_with_certificates(out['server_url'], out['server_certificate_path'],
-                                               out['server_private_key_path'], out['certificates'])
+    server, _ = await server_with_certificates(out.get('server_url'), out.get('server_certificate_path'),
+                                               out.get('server_private_key_path'), out.get('certificates'))
     return server
 
 if __name__ == '__main__':
