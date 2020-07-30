@@ -1,5 +1,6 @@
 import logging
 import asyncio
+import os
 
 from asyncua import Client
 
@@ -11,7 +12,7 @@ from asyncua_utils.server import server_from_yaml
 logging.basicConfig(level=logging.WARNING)
 _logger = logging.getLogger('asyncua')
 
-PLC_url = "opc.tcp://plc:4840/freeopcua/server/"
+PLC_url = os.environ['OPC_PLC_URL']
 cloud_url = "opc.tcp://cloud:4840/freeopcua/server/"
 
 
