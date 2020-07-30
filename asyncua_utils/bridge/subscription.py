@@ -45,7 +45,11 @@ class SubscriptionHandler:
             _logger.exception(f"mapped connection with host node {node_id} has no mapping in the subscription handler")
             return
         client_node = self._server.get_node(client_id)
-        await client_node.set_value(val)
+        try:
+            await client_node.set_value(val)
+        except asyncua.ua.uaerrors.UaError:
+            _logger.warning(f"client node {node_id} tried to set a bad value of {val} and instead has been nullified")
+            await client_node.set_value(None)
 
     def server_id_from_client_id(self, client_id):
         keys = [key for key, value in self._client_server_mapping.items() if value == client_id]
