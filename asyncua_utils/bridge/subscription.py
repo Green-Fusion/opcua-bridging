@@ -66,7 +66,6 @@ class SubscriptionHandler:
         request_params = event.request_params
         user = event.user
         if user.name is not None:
-            _logger.warning('THIS IS HAPPENING')
             for idx in range(len(response_params)):
                 if response_params[idx].is_good():
                     write_params = request_params.NodesToWrite[idx]
