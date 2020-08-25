@@ -18,7 +18,9 @@ async def clone_and_subscribe(client_node, server_node, sub_handler, subscriptio
     mapping_list = await clone_nodes(node_dict, server_node)
     subscribe_with_handler_from_list(sub_handler, mapping_list)
     nodes = [client.get_node(srv_node_id) for srv_node_id, _ in mapping_list]
-    await subscription_obj.subscribe_data_change(nodes)
+    sub_node_lists = [nodes[x:x+50] for x in range(0, len(nodes), 50)]
+    for node_list in sub_node_lists:
+        await subscription_obj.subscribe_data_change(node_list)
 
 
 class SubscriptionHandler:
