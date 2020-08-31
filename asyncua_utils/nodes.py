@@ -24,7 +24,7 @@ async def browse_nodes(node, to_export=False):
         var_type = None
     else:
         try:
-            var_type = (await node.read_data_type_as_variant_type()).value
+            var_type = (await node.read_data_type_as_variant_type())
         except ua.UaError:
             _logger.warning('Node Variable Type could not be determined for %r', node)
             var_type = None
@@ -42,7 +42,7 @@ async def browse_nodes(node, to_export=False):
         if len(children) != 0:
             output['children'] = children
         if output['type']:
-            output['type'] = VariantType(output['type'])
+            output['type'] = VariantType(output['type']).name
         if output['cls']:
             output['cls'] = NodeClass(output['cls']).name
         if output['cls'] == 'Variable':
@@ -80,5 +80,6 @@ async def add_variable(base_object, idx, node_name, node_type):
     elif node_type == VariantType.DateTime:
         default_val = datetime.datetime(seconds=0)
     else:
+        _logger.warning(f"node type {node_type} not covered by add_variable")
         default_val = None
     await base_object.add_variable(idx, node_name, default_val, node_type)
