@@ -78,7 +78,9 @@ async def add_variable(base_object, idx, node_dict):
         original_val = node_dict['current_value']
     elif node_type == VariantType.Boolean:
         original_val = False
-    elif node_type in [VariantType.Int16, VariantType.UInt16, VariantType.Int32, VariantType.UInt32, VariantType.Int64, VariantType.UInt64]:
+    elif node_type in [VariantType.Int16, VariantType.UInt16, VariantType.Int32,
+                       VariantType.UInt32, VariantType.Int64, VariantType.UInt64,
+                       VariantType.Float]:
         original_val = 0
     elif node_type in [VariantType.String, VariantType.LocalizedText]:
         original_val = ''
