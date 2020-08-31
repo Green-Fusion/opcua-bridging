@@ -79,7 +79,7 @@ class SubscriptionHandler:
 
     def subscribe_to_writes(self):
         # need some way of awaiting this
-        self._server.subscribe_server_callback(CallbackType.WritePerformed, self.inverse_forwarding)
+        self._server.subscribe_server_callback(CallbackType.PreWrite, self.inverse_forwarding)
 
     @staticmethod
     async def _safe_set(node, value):
