@@ -82,11 +82,11 @@ async def add_variable(base_object, idx, node_dict):
                        VariantType.UInt32, VariantType.Int64, VariantType.UInt64,
                        VariantType.Float]:
         original_val = 0
-    elif node_type in [VariantType.String, VariantType.LocalizedText]:
+    elif node_type in [VariantType.String, VariantType.LocalizedText, VariantType.Byte]:
         original_val = ''
     elif node_type == VariantType.DateTime:
         original_val = datetime.datetime(seconds=0)
     else:
         _logger.warning(f"node type {node_type} not covered by add_variable")
-        original_val = None
+        original_val = 0.0
     return await base_object.add_variable(idx, node_name, original_val, node_type)
