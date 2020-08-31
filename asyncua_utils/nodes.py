@@ -41,7 +41,7 @@ async def browse_nodes(node, to_export=False):
         if len(children) != 0:
             output['children'] = children
         if output['type']:
-            output['type'] = VariantType(output['type']).name
+            output['type'] = VariantType(output['type'])
         if output['cls']:
             output['cls'] = NodeClass(output['cls']).name
         if output['cls'] == 'Variable':
@@ -61,9 +61,13 @@ async def clone_nodes(nodes_dict, base_object, idx=0):
             mapping_list.extend(await clone_nodes(child, next_obj, idx=idx))
     elif nodes_dict['cls'] == 2:
         # node is a variable
-        next_var = await base_object.add_variable(idx, nodes_dict['name'], 0.0)
+        next_var = await add_variable(base_object, idx, nodes_dict['name'], nodes_dict['type'])
         mapped_id = next_var.nodeid.to_string()
         mapping_list.append((nodes_dict['id'], mapped_id))
     else:
         raise NotImplementedError
     return mapping_list
+
+
+async def add_variable(base_object, idx, node_name, node_type):
+    await base_object.add_variable(idx, node_name, None, node_type)
