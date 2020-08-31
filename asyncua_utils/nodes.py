@@ -82,4 +82,4 @@ async def add_variable(base_object, idx, node_name, node_type):
     else:
         _logger.warning(f"node type {node_type} not covered by add_variable")
         default_val = None
-    await base_object.add_variable(idx, node_name, default_val, node_type)
+    return await base_object.add_variable(idx, node_name, default_val, node_type)
