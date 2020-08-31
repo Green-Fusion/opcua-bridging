@@ -28,11 +28,16 @@ async def browse_nodes(node, to_export=False):
         except ua.UaError:
             _logger.warning('Node Variable Type could not be determined for %r', node)
             var_type = None
+        try:
+            current_value = await node.get_value()
+        except (BadOutOfService, BadAttributeIdInvalid):
+            current_value = None
     output = {
         'id': node.nodeid.to_string(),
         'name': (await node.read_display_name()).Text,
         'cls': node_class.value,
         'type': var_type,
+        'current_value': current_value
     }
 
     if not to_export:
@@ -45,11 +50,6 @@ async def browse_nodes(node, to_export=False):
             output['type'] = VariantType(output['type']).name
         if output['cls']:
             output['cls'] = NodeClass(output['cls']).name
-        if output['cls'] == 'Variable':
-            try:
-                output['current_value'] = await node.get_value()
-            except (BadOutOfService, BadAttributeIdInvalid):
-                output['current_value'] = None
     return output
 
 
@@ -62,7 +62,7 @@ async def clone_nodes(nodes_dict, base_object, idx=0):
             mapping_list.extend(await clone_nodes(child, next_obj, idx=idx))
     elif nodes_dict['cls'] == 2:
         # node is a variable
-        next_var = await add_variable(base_object, idx, nodes_dict['name'], nodes_dict['type'])
+        next_var = await add_variable(base_object, idx, nodes_dict)
         mapped_id = next_var.nodeid.to_string()
         mapping_list.append((nodes_dict['id'], mapped_id))
     else:
@@ -70,16 +70,20 @@ async def clone_nodes(nodes_dict, base_object, idx=0):
     return mapping_list
 
 
-async def add_variable(base_object, idx, node_name, node_type):
-    if node_type == VariantType.Boolean:
-        default_val = False
+async def add_variable(base_object, idx, node_dict):
+    node_name = node_dict['name']
+    node_type = node_dict['type']
+    if node_dict.get('current_value'):
+        original_val = node_dict['current_value']
+    elif node_type == VariantType.Boolean:
+        original_val = False
     elif node_type in [VariantType.Int16, VariantType.UInt16, VariantType.Int32, VariantType.UInt32, VariantType.Int64, VariantType.UInt64]:
-        default_val = 0
-    elif node_type == VariantType.String:
-        default_val = ''
+        original_val = 0
+    elif node_type in [VariantType.String, VariantType.LocalizedText, VariantType.Diagnostic]:
+        original_val = ''
     elif node_type == VariantType.DateTime:
-        default_val = datetime.datetime(seconds=0)
+        original_val = datetime.datetime(seconds=0)
     else:
         _logger.warning(f"node type {node_type} not covered by add_variable")
-        default_val = None
-    return await base_object.add_variable(idx, node_name, default_val, node_type)
+        original_val = None
+    return await base_object.add_variable(idx, node_name, original_val, node_type)
