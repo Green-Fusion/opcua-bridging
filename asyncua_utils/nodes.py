@@ -3,6 +3,7 @@ from asyncua import ua
 from asyncua.ua.uatypes import VariantType
 from asyncua.ua.uaprotocol_auto import NodeClass
 from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid
+import datetime
 
 _logger = logging.getLogger('asyncua')
 
@@ -70,4 +71,14 @@ async def clone_nodes(nodes_dict, base_object, idx=0):
 
 
 async def add_variable(base_object, idx, node_name, node_type):
-    await base_object.add_variable(idx, node_name, None, node_type)
+    if node_type == VariantType.Boolean:
+        default_val = False
+    elif node_type in [VariantType.Int16, VariantType.UInt16, VariantType.Int32, VariantType.UInt32, VariantType.Int64, VariantType.UInt64]:
+        default_val = 0
+    elif node_type == VariantType.String:
+        default_val = ''
+    elif node_type == VariantType.DateTime:
+        default_val = datetime.datetime(seconds=0)
+    else:
+        default_val = None
+    await base_object.add_variable(idx, node_name, default_val, node_type)
