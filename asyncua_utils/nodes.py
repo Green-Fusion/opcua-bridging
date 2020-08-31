@@ -37,8 +37,9 @@ async def browse_nodes(node, to_export=False):
         'name': (await node.read_display_name()).Text,
         'cls': node_class.value,
         'type': var_type,
-        'current_value': current_value
     }
+    if var_type:
+        output['current_value'] = current_value
 
     if not to_export:
         output['node'] = node
