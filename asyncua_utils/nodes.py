@@ -80,7 +80,7 @@ async def add_variable(base_object, idx, node_dict):
         original_val = False
     elif node_type in [VariantType.Int16, VariantType.UInt16, VariantType.Int32, VariantType.UInt32, VariantType.Int64, VariantType.UInt64]:
         original_val = 0
-    elif node_type in [VariantType.String, VariantType.LocalizedText, VariantType.Diagnostic]:
+    elif node_type in [VariantType.String, VariantType.LocalizedText]:
         original_val = ''
     elif node_type == VariantType.DateTime:
         original_val = datetime.datetime(seconds=0)
