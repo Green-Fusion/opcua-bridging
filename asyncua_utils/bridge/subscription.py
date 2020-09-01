@@ -66,8 +66,10 @@ class SubscriptionHandler:
     async def inverse_forwarding(self, event, dispatch):
         response_params = event.response_params
         request_params = event.request_params
+        _logger.warning(f"inverse forwarding called with response params {event.response_params} and request params {event.request_params}")
         user = event.user
         if user.name is not None:
+            _logger.warning('user passed')
             for idx in range(len(response_params)):
                 if response_params[idx].is_good():
                     write_params = request_params.NodesToWrite[idx]
@@ -76,6 +78,7 @@ class SubscriptionHandler:
                     value = write_params.Value
                     val = self._client.get_node(forward_node_id)
                     await val.set_value(value)
+                    _logger.warning(f'value set of {value}')
 
     def subscribe_to_writes(self):
         # need some way of awaiting this
