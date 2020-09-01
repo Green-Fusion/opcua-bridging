@@ -2,6 +2,7 @@ from asyncua.server.user_managers import CertificateUserManager
 from asyncua import Server
 from asyncua import ua
 import yaml
+from asyncua.crypto.permission_rules import SimpleRoleRuleset
 
 
 async def server_with_certificates(server_url, server_certificate_path, server_private_key_path, certificates=None):
@@ -35,7 +36,9 @@ async def server_with_certificates(server_url, server_certificate_path, server_p
         server = Server()
     await server.init()
     server.set_endpoint(server_url)
-    # server.set_security_policy([ua.SecurityPolicyType.Basic256Sha256_SignAndEncrypt])
+    if certificates is not None:
+        server.set_security_policy([ua.SecurityPolicyType.Basic256Sha256_SignAndEncrypt],
+                                   permission_ruleset=SimpleRoleRuleset())
     if server_certificate_path:
         await server.load_certificate(server_certificate_path)
         await server.load_private_key(server_private_key_path)
