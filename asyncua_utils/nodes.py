@@ -49,6 +49,8 @@ async def browse_nodes(node, to_export=False):
             output['children'] = children
         if output['type']:
             output['type'] = VariantType(output['type']).name
+        else:
+            del output['type']
         if output['cls']:
             output['cls'] = NodeClass(output['cls']).name
     return output

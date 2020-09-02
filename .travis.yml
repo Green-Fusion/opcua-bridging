@@ -11,4 +11,8 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 
-script: make test
+jobs:
+  include:
+    - stage: test
+      script: make test
+    - script: make test-yaml

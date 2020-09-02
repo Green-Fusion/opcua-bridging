@@ -1,9 +1,7 @@
 from asyncua_utils.nodes import browse_nodes, clone_nodes
 import logging
 from asyncua.common.callback import CallbackType
-from asyncua import Server, Client
 import asyncua.ua.uaerrors
-
 
 _logger = logging.getLogger('asyncua')
 

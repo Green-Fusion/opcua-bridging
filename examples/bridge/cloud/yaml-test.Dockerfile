@@ -23,4 +23,4 @@ RUN chmod +x /wait
 
 WORKDIR /cloud
 
-CMD /wait && python cloud/forwarding-service.py
+CMD /wait && python cloud/yaml-generation.py
