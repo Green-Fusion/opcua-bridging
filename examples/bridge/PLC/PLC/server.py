@@ -20,13 +20,13 @@ async def main():
     # populating our address space
     # server.nodes, contains links to very common nodes like objects and root
     myobj = await server.nodes.objects.add_object(idx, 'MyObject')
-    myvar = await myobj.add_variable(idx, 'MyVariable', 6.7)
+    myvar = await myobj.add_variable('s=my_var', 'MyVariable', 6.7)
 
     # variables that should be able to be set by external client
     setobj = await server.nodes.objects.add_object(idx, 'Controlling')
-    cntrl_1 = await setobj.add_variable(idx, 'Control1', True)
-    cntrl_2 = await setobj.add_variable(idx, 'Control2', 'hello')
-    cntrl_3 = await setobj.add_variable(idx, 'Control3', 6)
+    cntrl_1 = await setobj.add_variable('s=control_1', 'Control1', True)
+    cntrl_2 = await setobj.add_variable('s=control_2', 'Control2', 'hello')
+    cntrl_3 = await setobj.add_variable('s=control_3', 'Control3', 6)
 
     ts_store = TimeSeriesStorage()
     tsobj = await server.nodes.objects.add_object(idx, 'TimeSeries')

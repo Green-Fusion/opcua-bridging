@@ -54,16 +54,19 @@ async def browse_nodes(node, to_export=False):
     return output
 
 
-async def clone_nodes(nodes_dict, base_object, idx=0):
+async def clone_nodes(nodes_dict, base_object, idx=0, node_id_prefix=''):
     mapping_list = []
+    node_id = node_id_prefix + nodes_dict['id']
+    _logger.warning(f"{node_id} about to be added")
+
     if nodes_dict['cls'] == 1:
         # node is an object
-        next_obj = await base_object.add_object(idx, nodes_dict['name'])
+        next_obj = await base_object.add_object(node_id, nodes_dict['name'])
         for child in nodes_dict['children']:
-            mapping_list.extend(await clone_nodes(child, next_obj, idx=idx))
+            mapping_list.extend(await clone_nodes(child, next_obj, idx=idx, node_id_prefix=node_id_prefix))
     elif nodes_dict['cls'] == 2:
         # node is a variable
-        next_var = await add_variable(base_object, idx, nodes_dict)
+        next_var = await add_variable(base_object, idx, nodes_dict, node_id)
         mapped_id = next_var.nodeid.to_string()
         mapping_list.append((nodes_dict['id'], mapped_id))
     else:
@@ -71,7 +74,7 @@ async def clone_nodes(nodes_dict, base_object, idx=0):
     return mapping_list
 
 
-async def add_variable(base_object, idx, node_dict):
+async def add_variable(base_object, idx, node_dict, node_id):
     node_name = node_dict['name']
     node_type = node_dict['type']
     if node_dict.get('current_value'):
@@ -89,4 +92,4 @@ async def add_variable(base_object, idx, node_dict):
     else:
         _logger.warning(f"node type {node_type} not covered by add_variable")
         original_val = 0.0
-    return await base_object.add_variable(idx, node_name, original_val, node_type)
+    return await base_object.add_variable(node_id, node_name, original_val, node_type)

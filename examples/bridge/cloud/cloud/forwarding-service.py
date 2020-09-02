@@ -39,8 +39,8 @@ async def main():
 
     subscription = await client.create_subscription(5, handler)
 
-    await clone_and_subscribe(node_1_client, obj_1, handler, subscription, client)
-    await clone_and_subscribe(node_2_client, obj_2, handler, subscription, client)
+    await clone_and_subscribe(node_1_client, obj_1, handler, subscription, client, node_id_prefix='ns=1;')
+    await clone_and_subscribe(node_2_client, obj_2, handler, subscription, client, node_id_prefix='ns=2;')
     handler.subscribe_to_writes()
     nodes = [client_var]
     async with server:

@@ -10,12 +10,13 @@ _logger = logging.getLogger('asyncua')
 
 def subscribe_with_handler_from_list(sub_handler, mapping_list):
     for server_id, client_id in mapping_list:
+        _logger.warning(f'mapping{server_id}, {client_id}')
         sub_handler.add_connection(server_id, client_id)
 
 
-async def clone_and_subscribe(client_node, server_node, sub_handler, subscription_obj, client):
+async def clone_and_subscribe(client_node, server_node, sub_handler, subscription_obj, client, node_id_prefix=''):
     node_dict = await browse_nodes(client_node)
-    mapping_list = await clone_nodes(node_dict, server_node)
+    mapping_list = await clone_nodes(node_dict, server_node, node_id_prefix=node_id_prefix)
     subscribe_with_handler_from_list(sub_handler, mapping_list)
     nodes = [client.get_node(srv_node_id) for srv_node_id, _ in mapping_list]
     sub_node_lists = [nodes[x:x+50] for x in range(0, len(nodes), 50)]
@@ -55,7 +56,7 @@ class SubscriptionHandler:
 
     def server_id_from_client_id(self, client_id):
         keys = [key for key, value in self._client_server_mapping.items() if value == client_id]
-
+        _logger.warning(f"smilla {keys}, {client_id}")
         if len(keys) != 1:
             raise KeyError
         return keys[0]
