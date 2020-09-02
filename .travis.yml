@@ -15,4 +15,4 @@ jobs:
   include:
     - stage: test
       script: make test
-    - script: make test-yaml
+    - script: make test-yml
