@@ -43,10 +43,10 @@ async def main():
 
     _logger.info('Starting server!')
     async with server:
-        count = 0
         while True:
             await asyncio.sleep(1)
-            count += 0.1
+            old_val = await myvar.read_value()
+            count = old_val + 0.1
             _logger.info('Set value of %s to %.1f', myvar, count)
             await myvar.write_value(count)
             await ts_store.propagate()
