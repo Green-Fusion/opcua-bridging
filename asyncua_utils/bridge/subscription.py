@@ -12,12 +12,16 @@ def subscribe_with_handler_from_list(sub_handler, mapping_list):
         sub_handler.add_connection(server_id, client_id)
 
 
-async def clone_and_subscribe(client_node, server_node, sub_handler, subscription_obj, client, node_id_prefix=''):
+async def create_simple_bridge(client_node, server_node, sub_handler, subscription_obj, client, node_id_prefix=''):
     node_dict = await browse_nodes(client_node)
+    await clone_and_subscribe(client, node_dict, node_id_prefix, server_node, sub_handler, subscription_obj)
+
+
+async def clone_and_subscribe(client, node_dict, node_id_prefix, server_node, sub_handler, subscription_obj):
     mapping_list = await clone_nodes(node_dict, server_node, node_id_prefix=node_id_prefix)
     subscribe_with_handler_from_list(sub_handler, mapping_list)
     nodes = [client.get_node(srv_node_id) for srv_node_id, _ in mapping_list]
-    sub_node_lists = [nodes[x:x+50] for x in range(0, len(nodes), 50)]
+    sub_node_lists = [nodes[x:x + 50] for x in range(0, len(nodes), 50)]
     for node_list in sub_node_lists:
         await subscription_obj.subscribe_data_change(node_list)
 

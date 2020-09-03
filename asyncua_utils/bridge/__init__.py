@@ -1,1 +1,1 @@
-from asyncua_utils.bridge.subscription import clone_and_subscribe
+from asyncua_utils.bridge.subscription import create_simple_bridge, clone_and_subscribe

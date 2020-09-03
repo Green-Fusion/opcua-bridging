@@ -8,11 +8,13 @@ from asyncua_utils.bridge import create_simple_bridge
 from asyncua_utils.bridge.subscription import SubscriptionHandler
 from asyncua.crypto.security_policies import SecurityPolicyBasic256Sha256
 from asyncua_utils.server import server_from_yaml
+from asyncua_utils.bridge.yaml import bridge_from_yaml
 
 logging.basicConfig(level=logging.WARNING)
 _logger = logging.getLogger('asyncua')
 
 PLC_url = os.environ['OPC_PLC_URL']
+PLC_url_2 = os.environ['OPC_PLC_URL_2']
 cloud_url = "opc.tcp://cloud:4840/freeopcua/server/"
 
 
@@ -29,12 +31,13 @@ async def main():
     )
     await client.connect()
 
-    obj_1 = await server.nodes.objects.add_object(0, 'ExamplePLC')
-    obj_2 = await server.nodes.objects.add_object(1, 'TSPLC')
-    node_1_client = await client.nodes.objects.get_child(['0:MyObject'])
-    node_2_client = await client.nodes.objects.get_child(['0:TimeSeries'])
+    client2 = Client(url=PLC_url_2)
 
-    client_var = await client.nodes.root.get_child(['0:Objects', '0:MyObject', '0:MyVariable'])
+    await client2.connect()
+
+    await bridge_from_yaml(server, '/appdata/test_yaml/test.yaml')
+    exit(0)
+
     handler = SubscriptionHandler(client, server)
 
     subscription = await client.create_subscription(5, handler)
