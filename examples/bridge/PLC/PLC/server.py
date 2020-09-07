@@ -8,7 +8,7 @@ from asyncua.server.users import UserRole
 
 from PLC.data_fetcher import TimeSeriesStorage
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 _logger = logging.getLogger('asyncua')
 
 
@@ -45,10 +45,10 @@ async def main():
     async with server:
         while True:
             await asyncio.sleep(1)
-            old_val = await myvar.read_value()
-            count = old_val + 0.1
-            _logger.info('Set value of %s to %.1f', myvar, count)
-            await myvar.write_value(count)
+            # old_val = await myvar.read_value()
+            # count = old_val + 0.1
+            # _logger.info('Set value of %s to %.1f', myvar, count)
+            # await myvar.write_value(count)
             await ts_store.propagate()
 
 if __name__ == '__main__':
