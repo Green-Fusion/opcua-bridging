@@ -1,11 +1,11 @@
 version: "3.8"
 services:
-#  client:
-#    build:
-#      dockerfile: examples/bridge/client/Dockerfile
-#      context: ../..
-#    environment:
-#      - WAIT_HOSTS=cloud:4840,plc:4840
+  client:
+    build:
+      dockerfile: examples/bridge/client/Dockerfile
+      context: ../..
+    environment:
+      - WAIT_HOSTS=cloud:4840,plc:4840
   cloud:
     build:
       dockerfile: examples/bridge/cloud/yaml-test.Dockerfile

@@ -35,24 +35,13 @@ async def main():
 
     await client2.connect()
 
-    await bridge_from_yaml(server, '/appdata/test_yaml/test.yaml')
-    exit(0)
-
-    handler = SubscriptionHandler(client, server)
-
-    subscription = await client.create_subscription(5, handler)
-
-    await create_simple_bridge(node_1_client, obj_1, handler, subscription, client, node_id_prefix='ns=1;')
-    await create_simple_bridge(node_2_client, obj_2, handler, subscription, client, node_id_prefix='ns=2;')
-    handler.subscribe_to_writes()
-    nodes = [client_var]
+    holder = await bridge_from_yaml(server, '/appdata/test_yaml/test.yaml')
+    for sub_hold in holder:
+        _logger.warning(sub_hold[0]._client_server_mapping)
     async with server:
         # await subscription.subscribe_data_change(nodes)
-        await asyncio.sleep(100)
-        await subscription.delete()
-        await asyncio.sleep(1)
-        print(await client_var.read_value())
-
+        while True:
+            await asyncio.sleep(100)
 
 if __name__ == '__main__':
     asyncio.run(main())

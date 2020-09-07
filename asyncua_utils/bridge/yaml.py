@@ -24,7 +24,6 @@ async def produce_full_bridge_yaml(connection_list, output_file):
         full_dict.append(await cloned_namespace_dict(connection))
 
     yaml.dump(full_dict, open(output_file, 'w'))
-    logging.warning(yaml.dump(full_dict))
 
 
 async def bridge_from_yaml(server_object, server_yaml_file):
@@ -36,6 +35,7 @@ async def bridge_from_yaml(server_object, server_yaml_file):
     :return:
     """
     specification = yaml.load(open(server_yaml_file, 'r'), Loader=yaml.SafeLoader)
+    sub_list = []
     for namespace in specification:
         namespace_idx = await server_object.register_namespace(namespace['namespace'])
         downstream_client = asyncua.Client(url=namespace['url'])
@@ -48,4 +48,7 @@ async def bridge_from_yaml(server_object, server_yaml_file):
         sub_handler = SubscriptionHandler(downstream_client, server_object)
         subscription = await downstream_client.create_subscription(5, sub_handler)
         await clone_and_subscribe(downstream_client, namespace['nodes'], f'ns={namespace_idx};',
-                                  server_object.nodes.objects, sub_handler, subscription)
+                                  server_object.nodes.objects, sub_handler, subscription, namespace_idx)
+        sub_handler.subscribe_to_writes()
+        sub_list.append((sub_handler, subscription))
+    return sub_list
