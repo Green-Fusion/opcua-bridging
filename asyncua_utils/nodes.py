@@ -126,6 +126,7 @@ def fix_name(name, namespace_idx):
 async def add_variable(base_object, node_dict, node_id):
     node_name = node_dict['name']
     node_type = node_dict.get('type')
+    _logger.warning(node_name)
     if isinstance(node_type, str):
         node_type = VariantType[node_type]
 
@@ -144,7 +145,7 @@ async def add_variable(base_object, node_dict, node_id):
         original_val = datetime.datetime.today()
     elif node_type == VariantType.ExtensionObject:
         _logger.warning(f"Extension Objects are not supported by the bridge. Skipping")
-        return
+        return None
     else:
         _logger.warning(f"node type {node_type} not covered by add_variable")
         original_val = 0.0
