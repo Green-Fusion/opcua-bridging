@@ -13,7 +13,7 @@ def subscribe_with_handler_from_list(sub_handler, mapping_list):
 
 async def create_simple_bridge(client_node, server_node, sub_handler, subscription_obj, client, node_id_prefix=''):
     node_dict = await browse_nodes(client_node)
-    await clone_and_subscribe(client, node_dict, node_id_prefix, server_node, sub_handler, subscription_obj)
+    await clone_and_subscribe(client, node_dict, node_id_prefix, server_node, sub_handler, subscription_obj, 0)
 
 
 async def clone_and_subscribe(client, node_dict, node_id_prefix, server_node, sub_handler, subscription_obj,
