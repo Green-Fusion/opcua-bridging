@@ -13,10 +13,6 @@ from asyncua_utils.bridge.yaml import bridge_from_yaml
 logging.basicConfig(level=logging.WARNING)
 _logger = logging.getLogger('asyncua')
 
-PLC_url = os.environ['OPC_PLC_URL']
-PLC_url_2 = os.environ['OPC_PLC_URL_2']
-cloud_url = "opc.tcp://cloud:4840/freeopcua/server/"
-
 
 async def main():
     # setup our serverclone_and_subscribe(client_node, server_node, sub_handler)
