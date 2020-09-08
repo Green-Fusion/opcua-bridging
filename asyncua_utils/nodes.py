@@ -3,7 +3,8 @@ import asyncua
 from asyncua import ua
 from asyncua.ua.uatypes import VariantType
 from asyncua.ua.uaprotocol_auto import NodeClass
-from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid, BadInternalError, BadSecurityModeInsufficient
+from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid, BadInternalError, \
+                                BadSecurityModeInsufficient, BadNodeIdExists
 import datetime
 from copy import deepcopy
 import re
@@ -96,7 +97,11 @@ async def clone_nodes(nodes_dict, base_object, idx=0, node_id_prefix=''):
         # node is an object
 
         if nodes_dict.get('children'):
-            next_obj = await base_object.add_object(node_id, nodes_dict['name'])
+            try:
+                next_obj = await base_object.add_object(node_id, nodes_dict['name'])
+            except BadNodeIdExists as e:
+                _logger.warning(f'duplicate node {nodes_dict["name"]}')
+                return mapping_list
             for child in nodes_dict['children']:
                 mapping_list.extend(await clone_nodes(child, next_obj, idx=idx, node_id_prefix=node_id_prefix))
         else:
