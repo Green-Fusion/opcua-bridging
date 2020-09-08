@@ -3,7 +3,7 @@ import asyncio
 from asyncua_utils.server import server_from_yaml
 from asyncua_utils.bridge.yaml import bridge_from_yaml
 
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger('asyncua')
 
 

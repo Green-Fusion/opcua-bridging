@@ -1,0 +1,1743 @@
+- bridge_certificate: /credentials/cloud_cert.der
+  bridge_private_key: /credentials/cloud_private_key.pem
+  namespace: plc_1
+  nodes:
+    children:
+    - children:
+      - cls: Variable
+        current_value:
+        - urn:freeopcua:python:server
+        id: i=2254
+        name: 0:ServerArray
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:ServerArray
+        type: String
+      - cls: Variable
+        current_value:
+        - http://opcfoundation.org/UA/
+        - urn:freeopcua:python:server
+        id: i=2255
+        name: 0:NamespaceArray
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:NamespaceArray
+        type: String
+      - children:
+        - cls: Variable
+          current_value: 2020-09-08 12:05:32.376883
+          id: i=2257
+          name: 0:StartTime
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerStatus
+          - 0:StartTime
+          type: DateTime
+        - cls: Variable
+          current_value: 2020-09-08 12:05:35.379738
+          id: i=2258
+          name: 0:CurrentTime
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerStatus
+          - 0:CurrentTime
+          type: DateTime
+        - cls: Variable
+          current_value: 0
+          id: i=2259
+          name: 0:State
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerStatus
+          - 0:State
+          type: Int32
+        - children:
+          - cls: Variable
+            current_value: urn:freeopcua.github.io:python:server
+            id: i=2262
+            name: 0:ProductUri
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerStatus
+            - 0:BuildInfo
+            - 0:ProductUri
+            type: String
+          - cls: Variable
+            current_value: FreeOpcUa
+            id: i=2263
+            name: 0:ManufacturerName
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerStatus
+            - 0:BuildInfo
+            - 0:ManufacturerName
+            type: String
+          - cls: Variable
+            current_value: FreeOpcUa Python Server
+            id: i=2261
+            name: 0:ProductName
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerStatus
+            - 0:BuildInfo
+            - 0:ProductName
+            type: String
+          - cls: Variable
+            current_value: 1.0pre
+            id: i=2264
+            name: 0:SoftwareVersion
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerStatus
+            - 0:BuildInfo
+            - 0:SoftwareVersion
+            type: String
+          - cls: Variable
+            current_value: '0'
+            id: i=2265
+            name: 0:BuildNumber
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerStatus
+            - 0:BuildInfo
+            - 0:BuildNumber
+            type: String
+          - cls: Variable
+            current_value: 2020-09-08 12:05:32.345884
+            id: i=2266
+            name: 0:BuildDate
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerStatus
+            - 0:BuildInfo
+            - 0:BuildDate
+            type: DateTime
+          cls: Variable
+          id: i=2260
+          name: 0:BuildInfo
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerStatus
+          - 0:BuildInfo
+          type: ExtensionObject
+        - cls: Variable
+          current_value: null
+          id: i=2992
+          name: 0:SecondsTillShutdown
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerStatus
+          - 0:SecondsTillShutdown
+          type: UInt32
+        - cls: Variable
+          current_value: null
+          id: i=2993
+          name: 0:ShutdownReason
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerStatus
+          - 0:ShutdownReason
+          type: LocalizedText
+        cls: Variable
+        id: i=2256
+        name: 0:ServerStatus
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:ServerStatus
+        type: ExtensionObject
+      - cls: Variable
+        current_value: null
+        id: i=2267
+        name: 0:ServiceLevel
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:ServiceLevel
+        type: Byte
+      - cls: Variable
+        current_value: null
+        id: i=2994
+        name: 0:Auditing
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:Auditing
+        type: Boolean
+      - cls: Variable
+        current_value: null
+        id: i=12885
+        name: 0:EstimatedReturnTime
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:EstimatedReturnTime
+        type: DateTime
+      - cls: Variable
+        current_value: null
+        id: i=17634
+        name: 0:LocalTime
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:LocalTime
+        type: ExtensionObject
+      - children:
+        - cls: Variable
+          current_value: null
+          id: i=2269
+          name: 0:ServerProfileArray
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:ServerProfileArray
+          type: String
+        - cls: Variable
+          current_value: null
+          id: i=2271
+          name: 0:LocaleIdArray
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:LocaleIdArray
+          type: String
+        - cls: Variable
+          current_value: null
+          id: i=2272
+          name: 0:MinSupportedSampleRate
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:MinSupportedSampleRate
+          type: Double
+        - cls: Variable
+          current_value: null
+          id: i=2735
+          name: 0:MaxBrowseContinuationPoints
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:MaxBrowseContinuationPoints
+          type: UInt16
+        - cls: Variable
+          current_value: null
+          id: i=2736
+          name: 0:MaxQueryContinuationPoints
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:MaxQueryContinuationPoints
+          type: UInt16
+        - cls: Variable
+          current_value: null
+          id: i=2737
+          name: 0:MaxHistoryContinuationPoints
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:MaxHistoryContinuationPoints
+          type: UInt16
+        - cls: Variable
+          current_value: null
+          id: i=3704
+          name: 0:SoftwareCertificates
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:SoftwareCertificates
+          type: ExtensionObject
+        - cls: Variable
+          current_value: null
+          id: i=11702
+          name: 0:MaxArrayLength
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:MaxArrayLength
+          type: UInt32
+        - cls: Variable
+          current_value: null
+          id: i=11703
+          name: 0:MaxStringLength
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:MaxStringLength
+          type: UInt32
+        - cls: Variable
+          current_value: null
+          id: i=12911
+          name: 0:MaxByteStringLength
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:MaxByteStringLength
+          type: UInt32
+        - children:
+          - cls: Variable
+            current_value: 10000
+            id: i=11705
+            name: 0:MaxNodesPerRead
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerRead
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=12165
+            name: 0:MaxNodesPerHistoryReadData
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerHistoryReadData
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=12166
+            name: 0:MaxNodesPerHistoryReadEvents
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerHistoryReadEvents
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=11707
+            name: 0:MaxNodesPerWrite
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerWrite
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=12167
+            name: 0:MaxNodesPerHistoryUpdateData
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerHistoryUpdateData
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=12168
+            name: 0:MaxNodesPerHistoryUpdateEvents
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerHistoryUpdateEvents
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=11709
+            name: 0:MaxNodesPerMethodCall
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerMethodCall
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=11710
+            name: 0:MaxNodesPerBrowse
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerBrowse
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=11711
+            name: 0:MaxNodesPerRegisterNodes
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerRegisterNodes
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=11712
+            name: 0:MaxNodesPerTranslateBrowsePathsToNodeIds
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerTranslateBrowsePathsToNodeIds
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=11713
+            name: 0:MaxNodesPerNodeManagement
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxNodesPerNodeManagement
+            type: UInt32
+          - cls: Variable
+            current_value: 10000
+            id: i=11714
+            name: 0:MaxMonitoredItemsPerCall
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:OperationLimits
+            - 0:MaxMonitoredItemsPerCall
+            type: UInt32
+          cls: Object
+          id: i=11704
+          name: 0:OperationLimits
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:OperationLimits
+        - cls: Object
+          id: i=2996
+          name: 0:ModellingRules
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:ModellingRules
+        - cls: Object
+          id: i=2997
+          name: 0:AggregateFunctions
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:AggregateFunctions
+        - children:
+          - children:
+            - cls: Variable
+              current_value: null
+              id: i=16192
+              name: 0:Identities
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Anonymous
+              - 0:Identities
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=16193
+              name: 0:Applications
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Anonymous
+              - 0:Applications
+              type: String
+            - cls: Variable
+              current_value: null
+              id: i=15412
+              name: 0:ApplicationsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Anonymous
+              - 0:ApplicationsExclude
+              type: Boolean
+            - cls: Variable
+              current_value: null
+              id: i=16194
+              name: 0:Endpoints
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Anonymous
+              - 0:Endpoints
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=15413
+              name: 0:EndpointsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Anonymous
+              - 0:EndpointsExclude
+              type: Boolean
+            cls: Object
+            id: i=15644
+            name: 0:Anonymous
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:RoleSet
+            - 0:Anonymous
+          - children:
+            - cls: Variable
+              current_value: null
+              id: i=16203
+              name: 0:Identities
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:AuthenticatedUser
+              - 0:Identities
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=16204
+              name: 0:Applications
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:AuthenticatedUser
+              - 0:Applications
+              type: String
+            - cls: Variable
+              current_value: null
+              id: i=15414
+              name: 0:ApplicationsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:AuthenticatedUser
+              - 0:ApplicationsExclude
+              type: Boolean
+            - cls: Variable
+              current_value: null
+              id: i=16205
+              name: 0:Endpoints
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:AuthenticatedUser
+              - 0:Endpoints
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=15415
+              name: 0:EndpointsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:AuthenticatedUser
+              - 0:EndpointsExclude
+              type: Boolean
+            cls: Object
+            id: i=15656
+            name: 0:AuthenticatedUser
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:RoleSet
+            - 0:AuthenticatedUser
+          - children:
+            - cls: Variable
+              current_value: null
+              id: i=16214
+              name: 0:Identities
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Observer
+              - 0:Identities
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=16215
+              name: 0:Applications
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Observer
+              - 0:Applications
+              type: String
+            - cls: Variable
+              current_value: null
+              id: i=15416
+              name: 0:ApplicationsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Observer
+              - 0:ApplicationsExclude
+              type: Boolean
+            - cls: Variable
+              current_value: null
+              id: i=16216
+              name: 0:Endpoints
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Observer
+              - 0:Endpoints
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=15417
+              name: 0:EndpointsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Observer
+              - 0:EndpointsExclude
+              type: Boolean
+            cls: Object
+            id: i=15668
+            name: 0:Observer
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:RoleSet
+            - 0:Observer
+          - children:
+            - cls: Variable
+              current_value: null
+              id: i=16225
+              name: 0:Identities
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Operator
+              - 0:Identities
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=16226
+              name: 0:Applications
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Operator
+              - 0:Applications
+              type: String
+            - cls: Variable
+              current_value: null
+              id: i=15418
+              name: 0:ApplicationsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Operator
+              - 0:ApplicationsExclude
+              type: Boolean
+            - cls: Variable
+              current_value: null
+              id: i=16227
+              name: 0:Endpoints
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Operator
+              - 0:Endpoints
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=15423
+              name: 0:EndpointsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Operator
+              - 0:EndpointsExclude
+              type: Boolean
+            cls: Object
+            id: i=15680
+            name: 0:Operator
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:RoleSet
+            - 0:Operator
+          - children:
+            - cls: Variable
+              current_value: null
+              id: i=16236
+              name: 0:Identities
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Engineer
+              - 0:Identities
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=16237
+              name: 0:Applications
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Engineer
+              - 0:Applications
+              type: String
+            - cls: Variable
+              current_value: null
+              id: i=15424
+              name: 0:ApplicationsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Engineer
+              - 0:ApplicationsExclude
+              type: Boolean
+            - cls: Variable
+              current_value: null
+              id: i=16238
+              name: 0:Endpoints
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Engineer
+              - 0:Endpoints
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=15425
+              name: 0:EndpointsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Engineer
+              - 0:EndpointsExclude
+              type: Boolean
+            cls: Object
+            id: i=16036
+            name: 0:Engineer
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:RoleSet
+            - 0:Engineer
+          - children:
+            - cls: Variable
+              current_value: null
+              id: i=16247
+              name: 0:Identities
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Supervisor
+              - 0:Identities
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=16248
+              name: 0:Applications
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Supervisor
+              - 0:Applications
+              type: String
+            - cls: Variable
+              current_value: null
+              id: i=15426
+              name: 0:ApplicationsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Supervisor
+              - 0:ApplicationsExclude
+              type: Boolean
+            - cls: Variable
+              current_value: null
+              id: i=16249
+              name: 0:Endpoints
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Supervisor
+              - 0:Endpoints
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=15427
+              name: 0:EndpointsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:Supervisor
+              - 0:EndpointsExclude
+              type: Boolean
+            cls: Object
+            id: i=15692
+            name: 0:Supervisor
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:RoleSet
+            - 0:Supervisor
+          - children:
+            - cls: Variable
+              current_value: null
+              id: i=16269
+              name: 0:Identities
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:ConfigureAdmin
+              - 0:Identities
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=16270
+              name: 0:Applications
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:ConfigureAdmin
+              - 0:Applications
+              type: String
+            - cls: Variable
+              current_value: null
+              id: i=15428
+              name: 0:ApplicationsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:ConfigureAdmin
+              - 0:ApplicationsExclude
+              type: Boolean
+            - cls: Variable
+              current_value: null
+              id: i=16271
+              name: 0:Endpoints
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:ConfigureAdmin
+              - 0:Endpoints
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=15429
+              name: 0:EndpointsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:ConfigureAdmin
+              - 0:EndpointsExclude
+              type: Boolean
+            cls: Object
+            id: i=15716
+            name: 0:ConfigureAdmin
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:RoleSet
+            - 0:ConfigureAdmin
+          - children:
+            - cls: Variable
+              current_value: null
+              id: i=16258
+              name: 0:Identities
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:SecurityAdmin
+              - 0:Identities
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=16259
+              name: 0:Applications
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:SecurityAdmin
+              - 0:Applications
+              type: String
+            - cls: Variable
+              current_value: null
+              id: i=15430
+              name: 0:ApplicationsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:SecurityAdmin
+              - 0:ApplicationsExclude
+              type: Boolean
+            - cls: Variable
+              current_value: null
+              id: i=16260
+              name: 0:Endpoints
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:SecurityAdmin
+              - 0:Endpoints
+              type: ExtensionObject
+            - cls: Variable
+              current_value: null
+              id: i=15527
+              name: 0:EndpointsExclude
+              path:
+              - 0:Objects
+              - 0:Server
+              - 0:ServerCapabilities
+              - 0:RoleSet
+              - 0:SecurityAdmin
+              - 0:EndpointsExclude
+              type: Boolean
+            cls: Object
+            id: i=15704
+            name: 0:SecurityAdmin
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:RoleSet
+            - 0:SecurityAdmin
+          cls: Object
+          id: i=15606
+          name: 0:RoleSet
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:RoleSet
+        - children:
+          - cls: Variable
+            current_value: null
+            id: i=11193
+            name: 0:AccessHistoryDataCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:AccessHistoryDataCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11242
+            name: 0:AccessHistoryEventsCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:AccessHistoryEventsCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11273
+            name: 0:MaxReturnDataValues
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:MaxReturnDataValues
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=11274
+            name: 0:MaxReturnEventValues
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:MaxReturnEventValues
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=11196
+            name: 0:InsertDataCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:InsertDataCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11197
+            name: 0:ReplaceDataCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:ReplaceDataCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11198
+            name: 0:UpdateDataCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:UpdateDataCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11199
+            name: 0:DeleteRawCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:DeleteRawCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11200
+            name: 0:DeleteAtTimeCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:DeleteAtTimeCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11281
+            name: 0:InsertEventCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:InsertEventCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11282
+            name: 0:ReplaceEventCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:ReplaceEventCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11283
+            name: 0:UpdateEventCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:UpdateEventCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11502
+            name: 0:DeleteEventCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:DeleteEventCapability
+            type: Boolean
+          - cls: Variable
+            current_value: null
+            id: i=11275
+            name: 0:InsertAnnotationCapability
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:InsertAnnotationCapability
+            type: Boolean
+          - cls: Object
+            id: i=11201
+            name: 0:AggregateFunctions
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:AggregateFunctions
+          - cls: Variable
+            current_value: null
+            id: i=19091
+            name: 0:ServerTimestampSupported
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerCapabilities
+            - 0:HistoryServerCapabilities
+            - 0:ServerTimestampSupported
+            type: Boolean
+          cls: Object
+          id: i=11192
+          name: 0:HistoryServerCapabilities
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerCapabilities
+          - 0:HistoryServerCapabilities
+        cls: Object
+        id: i=2268
+        name: 0:ServerCapabilities
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:ServerCapabilities
+      - children:
+        - children:
+          - cls: Variable
+            current_value: null
+            id: i=2276
+            name: 0:ServerViewCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:ServerViewCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=2277
+            name: 0:CurrentSessionCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:CurrentSessionCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=2278
+            name: 0:CumulatedSessionCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:CumulatedSessionCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=2279
+            name: 0:SecurityRejectedSessionCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:SecurityRejectedSessionCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=3705
+            name: 0:RejectedSessionCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:RejectedSessionCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=2281
+            name: 0:SessionTimeoutCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:SessionTimeoutCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=2282
+            name: 0:SessionAbortCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:SessionAbortCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=2284
+            name: 0:PublishingIntervalCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:PublishingIntervalCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=2285
+            name: 0:CurrentSubscriptionCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:CurrentSubscriptionCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=2286
+            name: 0:CumulatedSubscriptionCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:CumulatedSubscriptionCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=2287
+            name: 0:SecurityRejectedRequestsCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:SecurityRejectedRequestsCount
+            type: UInt32
+          - cls: Variable
+            current_value: null
+            id: i=2288
+            name: 0:RejectedRequestsCount
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:ServerDiagnosticsSummary
+            - 0:RejectedRequestsCount
+            type: UInt32
+          cls: Variable
+          current_value: null
+          id: i=2275
+          name: 0:ServerDiagnosticsSummary
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerDiagnostics
+          - 0:ServerDiagnosticsSummary
+          type: ExtensionObject
+        - cls: Variable
+          current_value: null
+          id: i=2289
+          name: 0:SamplingIntervalDiagnosticsArray
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerDiagnostics
+          - 0:SamplingIntervalDiagnosticsArray
+          type: ExtensionObject
+        - cls: Variable
+          current_value: null
+          id: i=2290
+          name: 0:SubscriptionDiagnosticsArray
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerDiagnostics
+          - 0:SubscriptionDiagnosticsArray
+          type: ExtensionObject
+        - children:
+          - cls: Variable
+            current_value: null
+            id: i=3707
+            name: 0:SessionDiagnosticsArray
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:SessionsDiagnosticsSummary
+            - 0:SessionDiagnosticsArray
+            type: ExtensionObject
+          - cls: Variable
+            current_value: null
+            id: i=3708
+            name: 0:SessionSecurityDiagnosticsArray
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:ServerDiagnostics
+            - 0:SessionsDiagnosticsSummary
+            - 0:SessionSecurityDiagnosticsArray
+            type: ExtensionObject
+          cls: Object
+          id: i=3706
+          name: 0:SessionsDiagnosticsSummary
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerDiagnostics
+          - 0:SessionsDiagnosticsSummary
+        - cls: Variable
+          current_value: null
+          id: i=2294
+          name: 0:EnabledFlag
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerDiagnostics
+          - 0:EnabledFlag
+          type: Boolean
+        cls: Object
+        id: i=2274
+        name: 0:ServerDiagnostics
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:ServerDiagnostics
+      - cls: Object
+        id: i=2295
+        name: 0:VendorServerInfo
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:VendorServerInfo
+      - children:
+        - cls: Variable
+          current_value: null
+          id: i=3709
+          name: 0:RedundancySupport
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerRedundancy
+          - 0:RedundancySupport
+          type: Int32
+        - cls: Variable
+          current_value: null
+          id: i=11312
+          name: 0:CurrentServerId
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerRedundancy
+          - 0:CurrentServerId
+          type: String
+        - cls: Variable
+          current_value: null
+          id: i=11313
+          name: 0:RedundantServerArray
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerRedundancy
+          - 0:RedundantServerArray
+          type: ExtensionObject
+        - cls: Variable
+          current_value: null
+          id: i=11314
+          name: 0:ServerUriArray
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerRedundancy
+          - 0:ServerUriArray
+          type: String
+        - cls: Variable
+          current_value: null
+          id: i=14415
+          name: 0:ServerNetworkGroups
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:ServerRedundancy
+          - 0:ServerNetworkGroups
+          type: ExtensionObject
+        cls: Object
+        id: i=2296
+        name: 0:ServerRedundancy
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:ServerRedundancy
+      - children:
+        - children:
+          - cls: Variable
+            current_value: http://opcfoundation.org/UA/
+            id: i=15958
+            name: 0:NamespaceUri
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:Namespaces
+            - 0:http://opcfoundation.org/UA/
+            - 0:NamespaceUri
+            type: String
+          - cls: Variable
+            current_value: 1.04.6
+            id: i=15959
+            name: 0:NamespaceVersion
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:Namespaces
+            - 0:http://opcfoundation.org/UA/
+            - 0:NamespaceVersion
+            type: String
+          - cls: Variable
+            current_value: 2020-04-14 00:00:00
+            id: i=15960
+            name: 0:NamespacePublicationDate
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:Namespaces
+            - 0:http://opcfoundation.org/UA/
+            - 0:NamespacePublicationDate
+            type: DateTime
+          - cls: Variable
+            current_value: false
+            id: i=15961
+            name: 0:IsNamespaceSubset
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:Namespaces
+            - 0:http://opcfoundation.org/UA/
+            - 0:IsNamespaceSubset
+            type: Boolean
+          - cls: Variable
+            current_value:
+            - 0
+            id: i=15962
+            name: 0:StaticNodeIdTypes
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:Namespaces
+            - 0:http://opcfoundation.org/UA/
+            - 0:StaticNodeIdTypes
+            type: Int32
+          - cls: Variable
+            current_value:
+            - 1:65535
+            id: i=15963
+            name: 0:StaticNumericNodeIdRange
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:Namespaces
+            - 0:http://opcfoundation.org/UA/
+            - 0:StaticNumericNodeIdRange
+            type: String
+          - cls: Variable
+            current_value: "\n      "
+            id: i=15964
+            name: 0:StaticStringNodeIdPattern
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:Namespaces
+            - 0:http://opcfoundation.org/UA/
+            - 0:StaticStringNodeIdPattern
+            type: String
+          - cls: Variable
+            current_value: null
+            id: i=16134
+            name: 0:DefaultRolePermissions
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:Namespaces
+            - 0:http://opcfoundation.org/UA/
+            - 0:DefaultRolePermissions
+            type: ExtensionObject
+          - cls: Variable
+            current_value: null
+            id: i=16135
+            name: 0:DefaultUserRolePermissions
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:Namespaces
+            - 0:http://opcfoundation.org/UA/
+            - 0:DefaultUserRolePermissions
+            type: ExtensionObject
+          - cls: Variable
+            current_value: null
+            id: i=16136
+            name: 0:DefaultAccessRestrictions
+            path:
+            - 0:Objects
+            - 0:Server
+            - 0:Namespaces
+            - 0:http://opcfoundation.org/UA/
+            - 0:DefaultAccessRestrictions
+            type: UInt32
+          cls: Object
+          id: i=15957
+          name: 0:http://opcfoundation.org/UA/
+          path:
+          - 0:Objects
+          - 0:Server
+          - 0:Namespaces
+          - 0:http://opcfoundation.org/UA/
+        cls: Object
+        id: i=11715
+        name: 0:Namespaces
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:Namespaces
+      - cls: Object
+        id: i=17594
+        name: 0:Dictionaries
+        path:
+        - 0:Objects
+        - 0:Server
+        - 0:Dictionaries
+      cls: Object
+      id: i=2253
+      name: 0:Server
+      path:
+      - 0:Objects
+      - 0:Server
+    - children:
+      - cls: Variable
+        current_value: 6.7
+        id: s=my_var
+        name: 0:MyVariable
+        path:
+        - 0:Objects
+        - 0:MyObject
+        - 0:MyVariable
+        type: Double
+      cls: Object
+      id: i=20001
+      name: 0:MyObject
+      path:
+      - 0:Objects
+      - 0:MyObject
+    - children:
+      - cls: Variable
+        current_value: true
+        id: s=control_1
+        name: 0:Control1
+        path:
+        - 0:Objects
+        - 0:Controlling
+        - 0:Control1
+        type: Boolean
+      - cls: Variable
+        current_value: hello
+        id: s=control_2
+        name: 0:Control2
+        path:
+        - 0:Objects
+        - 0:Controlling
+        - 0:Control2
+        type: String
+      - cls: Variable
+        current_value: 6
+        id: s=control_3
+        name: 0:Control3
+        path:
+        - 0:Objects
+        - 0:Controlling
+        - 0:Control3
+        type: Int64
+      cls: Object
+      id: i=20002
+      name: 0:Controlling
+      path:
+      - 0:Objects
+      - 0:Controlling
+    - children:
+      - cls: Variable
+        current_value: 99.80430211205004
+        id: i=20004
+        name: 0:TimeSeries0
+        path:
+        - 0:Objects
+        - 0:TimeSeries
+        - 0:TimeSeries0
+        type: Int64
+      - cls: Variable
+        current_value: 99.0614426803442
+        id: i=20005
+        name: 0:TimeSeries1
+        path:
+        - 0:Objects
+        - 0:TimeSeries
+        - 0:TimeSeries1
+        type: Int64
+      - cls: Variable
+        current_value: 99.74857967143807
+        id: i=20006
+        name: 0:TimeSeries2
+        path:
+        - 0:Objects
+        - 0:TimeSeries
+        - 0:TimeSeries2
+        type: Int64
+      - cls: Variable
+        current_value: 99.75913533611833
+        id: i=20007
+        name: 0:TimeSeries3
+        path:
+        - 0:Objects
+        - 0:TimeSeries
+        - 0:TimeSeries3
+        type: Int64
+      - cls: Variable
+        current_value: 99.98275694617828
+        id: i=20008
+        name: 0:TimeSeries4
+        path:
+        - 0:Objects
+        - 0:TimeSeries
+        - 0:TimeSeries4
+        type: Int64
+      cls: Object
+      id: i=20003
+      name: 0:TimeSeries
+      path:
+      - 0:Objects
+      - 0:TimeSeries
+    cls: Object
+    id: i=85
+    name: 0:Objects
+    path:
+    - 0:Objects
+  server_certificate: /credentials/PLC_cert.der
+  url: opc.tcp://plc:4840
