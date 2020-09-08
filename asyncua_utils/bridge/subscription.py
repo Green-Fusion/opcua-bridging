@@ -68,9 +68,10 @@ class SubscriptionHandler:
     async def inverse_forwarding(self, event, dispatch):
         response_params = event.response_params
         request_params = event.request_params
-        _logger.warning(f"inverse forwarding called with response params {event.response_params} and request params {event.request_params}")
         user = event.user
         if user.name is not None:
+            _logger.warning(
+                f"inverse forwarding called with response params {event.response_params} and request params {event.request_params}")
             for idx in range(len(request_params.NodesToWrite)):
                 write_params = request_params.NodesToWrite[idx]
                 source_node_id = write_params.NodeId.to_string()
