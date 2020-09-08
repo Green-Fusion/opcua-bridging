@@ -1,12 +1,5 @@
 import logging
 import asyncio
-import os
-
-from asyncua import Client
-
-from asyncua_utils.bridge import create_simple_bridge
-from asyncua_utils.bridge.subscription import SubscriptionHandler
-from asyncua.crypto.security_policies import SecurityPolicyBasic256Sha256
 from asyncua_utils.server import server_from_yaml
 from asyncua_utils.bridge.yaml import bridge_from_yaml
 
