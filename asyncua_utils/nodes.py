@@ -131,7 +131,10 @@ async def add_variable(base_object, node_dict, node_id):
     if isinstance(node_type, str):
         node_type = VariantType[node_type]
 
-    if node_dict.get('current_value'):
+    if node_type == VariantType.ExtensionObject:
+        _logger.warning(f"Extension Objects are not supported by the bridge. Skipping")
+        return None
+    elif node_dict.get('current_value'):
         original_val = node_dict['current_value']
     elif node_type in [VariantType.Boolean]:
         original_val = False
@@ -144,16 +147,8 @@ async def add_variable(base_object, node_dict, node_id):
         original_val = ''
     elif node_type == VariantType.DateTime:
         original_val = datetime.datetime.today()
-    elif node_type == VariantType.ExtensionObject:
-        _logger.warning(f"Extension Objects are not supported by the bridge. Skipping")
-        return None
     else:
         _logger.warning(f"node type {node_type} not covered by add_variable")
         original_val = 0.0
-    try:
-        return await base_object.add_variable(node_id, node_name, original_val, node_type)
-    except:
-        _logger.warning(f"got past the filter: {node_type == VariantType.ExtensionObject}")
-        _logger.warning(f"{node_name}{node_type}")
-        _logger.warning(node_type)
-        exit(1)
+
+    return await base_object.add_variable(node_id, node_name, original_val, node_type)
