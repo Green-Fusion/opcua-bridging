@@ -36,7 +36,7 @@ def get_variables(nested_dict, path='', output_variables=None):
     if nested_dict['cls'] == 'Variable':
         variable_entry = {
             'path': new_path,
-            'type': nested_dict['type'],
+            'type': nested_dict.get('type'),
             'id': nested_dict['id'],
             'current_value': nested_dict.get('current_value')
         }
