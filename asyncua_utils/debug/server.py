@@ -38,7 +38,7 @@ def get_variables(nested_dict, path='', output_variables=None):
             'path': new_path,
             'type': nested_dict['type'],
             'id': nested_dict['id'],
-            'current_value': nested_dict['current_value']
+            'current_value': nested_dict.get('current_value')
         }
         output_variables.append(variable_entry)
     elif nested_dict.get('children') and len(nested_dict['children']) > 0:
