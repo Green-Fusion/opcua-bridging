@@ -37,8 +37,8 @@ async def main():
     node_2_client = client2.nodes.objects
 
     await produce_full_bridge_yaml([
-        {'nodes': node_2_client, 'namespace': 'plc_2', 'url': PLC_url_2},
-        {'nodes': node_1_client, 'namespace': 'plc_1', 'url': PLC_url, 'bridge_certificate':cloud_cert,
+        {'nodes': node_2_client, 'name': 'plc_2', 'url': PLC_url_2},
+        {'nodes': node_1_client, 'name': 'plc_1', 'url': PLC_url, 'bridge_certificate':cloud_cert,
          'bridge_private_key':cloud_private_key, 'server_certificate': server_cert },
     ], '/appdata/test_yaml/test.yaml')
 
