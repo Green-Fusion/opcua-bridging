@@ -18,9 +18,9 @@ async def client_PLC():
     client_PLC = Client(url=PLC_url)
     await client_PLC.set_security(
         SecurityPolicyBasic256Sha256,
-        certificate_path='/credentials/user_admin_cert.der',
-        private_key_path='/credentials/user_admin_private_key.pem',
-        server_certificate_path='/credentials/PLC_cert.der'
+        certificate='/credentials/user_admin_cert.der',
+        private_key='/credentials/user_admin_private_key.pem',
+        server_certificate='/credentials/PLC_cert.der'
     )
     return client_PLC
 
@@ -30,9 +30,9 @@ async def client_cloud():
     client_cloud = Client(url=cloud_url)
     await client_cloud.set_security(
         SecurityPolicyBasic256Sha256,
-        certificate_path='/credentials/user_admin_cert.der',
-        private_key_path='/credentials/user_admin_private_key.pem',
-        server_certificate_path='/credentials/cloud_cert.der'
+        certificate='/credentials/user_admin_cert.der',
+        private_key='/credentials/user_admin_private_key.pem',
+        server_certificate='/credentials/cloud_cert.der'
     )
     return client_cloud
 
