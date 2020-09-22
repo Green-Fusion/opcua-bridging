@@ -23,4 +23,4 @@ RUN chmod +x /wait
 
 WORKDIR /cloud
 
-CMD /wait && python cloud/forwarding-service.py
+CMD /wait && sleep 5 && python cloud/forwarding-service.py

@@ -23,9 +23,9 @@ async def main():
     server_cert = '/credentials/PLC_cert.der'
     await client.set_security(
         SecurityPolicyBasic256Sha256,
-        certificate_path=cloud_cert,
-        private_key_path=cloud_private_key,
-        server_certificate_path=server_cert
+        certificate=cloud_cert,
+        private_key=cloud_private_key,
+        server_certificate=server_cert
     )
     await client.connect()
 
@@ -37,8 +37,8 @@ async def main():
     node_2_client = client2.nodes.objects
 
     await produce_full_bridge_yaml([
-        {'nodes': node_2_client, 'namespace': 'plc_2', 'url': PLC_url_2},
-        {'nodes': node_1_client, 'namespace': 'plc_1', 'url': PLC_url, 'bridge_certificate':cloud_cert,
+        {'nodes': node_2_client, 'name': 'plc_2', 'url': PLC_url_2},
+        {'nodes': node_1_client, 'name': 'plc_1', 'url': PLC_url, 'bridge_certificate':cloud_cert,
          'bridge_private_key':cloud_private_key, 'server_certificate': server_cert },
     ], '/appdata/test_yaml/test.yaml')
 

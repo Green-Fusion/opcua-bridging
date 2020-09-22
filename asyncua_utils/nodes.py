@@ -1,13 +1,14 @@
 import logging
 import asyncua
-from asyncua import ua
-from asyncua.ua.uatypes import VariantType
+from asyncua import ua, Node, Client, Server
+from asyncua.ua.uatypes import VariantType, NodeId
 from asyncua.ua.uaprotocol_auto import NodeClass
 from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid, BadInternalError, \
                                 BadSecurityModeInsufficient, BadNodeIdExists
 import datetime
 from copy import deepcopy
 import re
+from typing import Union
 
 _logger = logging.getLogger('asyncua')
 
@@ -87,12 +88,12 @@ def check_if_object_is_from_module(obj_val, module):
         return getattr(obj_val, '__module__', '').startswith(module.__name__)
 
 
-async def clone_nodes(nodes_dict, base_object, idx=0, node_id_prefix=''):
+async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_array: list, server: Server):
     mapping_list = []
-    node_id = node_id_prefix + nodes_dict['id']
-    # _logger.warning(f"{node_id} about to be added, idx={idx}")
+    node_id = NodeId()  # generate a nodeid to avoid collisions.
+    nodes_dict['name'], namespace_idx = await fix_name_and_get_namespace(nodes_dict['name'], client_namespace_array,
+                                                                         server)
 
-    nodes_dict['name'] = fix_name(nodes_dict['name'], namespace_idx=idx)
     if nodes_dict['cls'] in [1, 'Object']:
         # node is an object
 
@@ -103,7 +104,7 @@ async def clone_nodes(nodes_dict, base_object, idx=0, node_id_prefix=''):
                 _logger.warning(f'duplicate node {nodes_dict["name"]}')
                 return mapping_list
             for child in nodes_dict['children']:
-                mapping_list.extend(await clone_nodes(child, next_obj, idx=idx, node_id_prefix=node_id_prefix))
+                mapping_list.extend(await clone_nodes(child, next_obj, client_namespace_array, server))
         else:
             return mapping_list
     elif nodes_dict['cls'] in [2, 'Variable']:
@@ -118,17 +119,20 @@ async def clone_nodes(nodes_dict, base_object, idx=0, node_id_prefix=''):
     return mapping_list
 
 
-def fix_name(name, namespace_idx):
+async def fix_name_and_get_namespace(name: str, namespace_array: list, server: Server):
     if name.startswith('http://'):
         _logger.warning('urls as names do not work, stripping the http')
         name = name[len('http://'):]
     if re.search(r"^\d:", name):
-        # checking if this name has the namespace in it, and if so changing it.
-        name = f"{str(namespace_idx)}{name[1:]}"
-    return name
+        namespace_idx = int(name[0])
+        namespace_uri = namespace_array[namespace_idx]
+        namespace_id = await server.register_namespace(namespace_uri)
+    else:
+        raise KeyError
+    return name, namespace_id
 
 
-async def add_variable(base_object, node_dict, node_id):
+async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, NodeId]):
     node_name = node_dict['name']
     node_type = node_dict.get('type')
 
