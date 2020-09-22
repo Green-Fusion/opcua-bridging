@@ -42,7 +42,8 @@ async def test_forwarding_from_plc(client_PLC, client_cloud):
     async with client_PLC:
         async with client_cloud:
             obj_PLC = await client_PLC.nodes.root.get_child(['0:Objects', '0:MyObject', '0:MyVariable'])
-            obj_cloud = await client_cloud.nodes.root.get_child(['0:Objects', "3:Objects", "3:MyObject", "3:MyVariable"])
+            obj_cloud = await client_cloud.nodes.root.get_child(['0:Objects', '0:plc_1', "0:Objects",
+                                                                 "0:MyObject", "0:MyVariable"])
 
             for i in range(10):
                 await asyncio.sleep(0.1)
@@ -57,7 +58,8 @@ async def test_forwarding_to_PLC(client_PLC, client_cloud):
     async with client_PLC:
         async with client_cloud:
             obj_PLC = await client_PLC.nodes.root.get_child(['0:Objects', '0:MyObject', '0:MyVariable'])
-            obj_cloud = await client_cloud.nodes.root.get_child(['0:Objects', "3:Objects", "3:MyObject", "3:MyVariable"])
+            obj_cloud = await client_cloud.nodes.root.get_child(['0:Objects', '0:plc_1', "0:Objects",
+                                                                 "0:MyObject", "0:MyVariable"])
             _logger.warning(await obj_cloud.get_value())
             for i in range(10):
                 randint = random.randint(0, 50)
