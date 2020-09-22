@@ -23,9 +23,9 @@ async def main():
     server_cert = '/credentials/PLC_cert.der'
     await client.set_security(
         SecurityPolicyBasic256Sha256,
-        certificate_path=cloud_cert,
-        private_key_path=cloud_private_key,
-        server_certificate_path=server_cert
+        certificate=cloud_cert,
+        private_key=cloud_private_key,
+        server_certificate=server_cert
     )
     await client.connect()
 

@@ -41,9 +41,9 @@ async def bridge_from_yaml(server_object, server_yaml_file):
         downstream_client = asyncua.Client(url=downstream_opc_server['url'])
         if downstream_opc_server.get('bridge_certificate'):
             await downstream_client.set_security(SecurityPolicyBasic256Sha256,
-                                                 certificate_path=downstream_opc_server['bridge_certificate'],
-                                                 private_key_path=downstream_opc_server['bridge_private_key'],
-                                                 server_certificate_path=downstream_opc_server['server_certificate'])
+                                                 certificate=downstream_opc_server['bridge_certificate'],
+                                                 private_key=downstream_opc_server['bridge_private_key'],
+                                                 server_certificate=downstream_opc_server['server_certificate'])
         await downstream_client.connect()
         sub_handler = SubscriptionHandler(downstream_client, server_object)
         subscription = await downstream_client.create_subscription(5, sub_handler)
