@@ -4,7 +4,7 @@ from asyncua import ua, Node, Client, Server
 from asyncua.ua.uatypes import VariantType, NodeId
 from asyncua.ua.uaprotocol_auto import NodeClass
 from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid, BadInternalError, \
-                                BadSecurityModeInsufficient, BadNodeIdExists
+                                BadSecurityModeInsufficient, BadNodeIdExists, UaError
 import datetime
 from copy import deepcopy
 import re
@@ -42,7 +42,7 @@ async def browse_nodes(node, to_export=False, path=None):
             var_type = None
         try:
             current_value = await node.get_value()
-        except (BadOutOfService, BadAttributeIdInvalid, BadInternalError, BadSecurityModeInsufficient):
+        except (BadOutOfService, BadAttributeIdInvalid, BadInternalError, BadSecurityModeInsufficient, UaError):
             current_value = None
     output = {
         'id': node_id,
