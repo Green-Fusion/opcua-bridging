@@ -51,5 +51,5 @@ async def bridge_from_yaml(server_object, server_yaml_file):
         await clone_and_subscribe(downstream_client, downstream_opc_server['nodes'],
                                   base_object, sub_handler, subscription, server_object)
         sub_handler.subscribe_to_writes()
-        sub_list.append((sub_handler, subscription))
+        sub_list.append((sub_handler, subscription, downstream_client))
     return sub_list
