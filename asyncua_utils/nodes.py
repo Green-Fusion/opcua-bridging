@@ -139,7 +139,7 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
     if isinstance(node_type, str):
         node_type = VariantType[node_type]
 
-    if node_type == VariantType.ExtensionObject:
+    if node_type in [VariantType.ExtensionObject, VariantType.Variant]:
         _logger.warning(f"Extension Objects are not supported by the bridge. Skipping")
         return None
     elif node_dict.get('current_value'):
