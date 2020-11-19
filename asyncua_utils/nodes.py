@@ -5,6 +5,7 @@ from asyncua.ua.uatypes import VariantType, NodeId
 from asyncua.ua.uaprotocol_auto import NodeClass
 from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid, BadInternalError, \
                                 BadSecurityModeInsufficient, BadNodeIdExists, UaError
+import asyncio
 import datetime
 from copy import deepcopy
 import re
@@ -70,6 +71,7 @@ async def browse_nodes(node, to_export=False, path=None):
             # if the current value is an asyncua object, which isnt yaml'd easily
             del output['current_value']
 
+    await asyncio.sleep(0.25)
     return output
 
 
