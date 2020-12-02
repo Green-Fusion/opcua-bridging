@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.WARNING)
 _logger = logging.getLogger('asyncua')
 
 PLC_url = os.environ['OPC_PLC_URL']
-PLC_url_2 = os.environ['OPC_PLC_URL_2']
+# PLC_url_2 = os.environ['OPC_PLC_URL_2']
 cloud_url = "opc.tcp://cloud:4840/freeopcua/server/"
 
 
@@ -29,18 +29,19 @@ async def main():
     )
     await client.connect()
 
-    client2 = Client(url=PLC_url_2)
-
-    await client2.connect()
+    # client2 = Client(url=PLC_url_2)
+    #
+    # await client2.connect()
 
     node_1_client = client.nodes.objects
-    node_2_client = client2.nodes.objects
+    # node_2_client = client2.nodes.objects
 
     await produce_full_bridge_yaml([
-        {'nodes': node_2_client, 'name': 'plc_2', 'url': PLC_url_2},
+        # {'nodes': node_2_client, 'name': 'plc_2', 'url': PLC_url_2},
         {'nodes': node_1_client, 'name': 'plc_1', 'url': PLC_url, 'bridge_certificate':cloud_cert,
          'bridge_private_key':cloud_private_key, 'server_certificate': server_cert },
     ], '/appdata/test_yaml/test.yaml')
 
 if __name__ == '__main__':
+    _logger.warning('got here')
     asyncio.run(main())

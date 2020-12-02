@@ -39,6 +39,8 @@ async def server_with_certificates(server_url, server_certificate_path, server_p
     if certificates is not None:
         server.set_security_policy([ua.SecurityPolicyType.Basic256Sha256_SignAndEncrypt],
                                    permission_ruleset=SimpleRoleRuleset())
+    else:
+        server.set_security_policy([ua.SecurityPolicyType.NoSecurity])
     if server_certificate_path:
         await server.load_certificate(server_certificate_path)
         await server.load_private_key(server_private_key_path)

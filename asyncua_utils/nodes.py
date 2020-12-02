@@ -22,19 +22,21 @@ async def browse_nodes(node, to_export=False, path=None):
     node_class = await node.read_node_class()
     children = []
     node_name = (await node.read_browse_name()).to_string()
-
     if path is None:
         path = [node_name]
     else:
         path.append(node_name)
 
-    for child in await node.get_children():
-        if await child.read_node_class() in [ua.NodeClass.Object, ua.NodeClass.Variable]:
+    node_children = await node.get_children()
+    for child in node_children:
+        if await child.read_node_class() in [ua.NodeClass.Object, ua.NodeClass.Variable, ua.NodeClass.Method]:
             children.append(
                 await browse_nodes(child, to_export=to_export, path=deepcopy(path))
             )
-    if node_class != ua.NodeClass.Variable:
+    if node_class == ua.NodeClass.Object:
         var_type = None
+    elif node_class == ua.NodeClass.Method:
+        _logger.warning("Methods not currently supported")
     else:
         try:
             var_type = (await node.read_data_type_as_variant_type())

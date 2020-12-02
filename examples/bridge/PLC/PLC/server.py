@@ -11,6 +11,13 @@ from PLC.data_fetcher import TimeSeriesStorage
 logging.basicConfig(level=logging.WARNING)
 _logger = logging.getLogger('asyncua')
 
+def func(parent, variant):
+    print("func method call with parameters: ", variant.Value)
+    ret = False
+    if variant.Value % 2 == 0:
+        ret = True
+    return [ua.Variant(ret, ua.VariantType.Boolean)]
+
 
 async def main():
     server = await server_from_yaml('/server/PLC_server_config.yaml')
@@ -27,6 +34,7 @@ async def main():
     cntrl_1 = await setobj.add_variable('s=control_1', 'Control1', True)
     cntrl_2 = await setobj.add_variable('s=control_2', 'Control2', 'hello')
     cntrl_3 = await setobj.add_variable('s=control_3', 'Control3', 6)
+    cntrl_4 = await setobj.add_method(idx, "mymethod", func, [ua.VariantType.Int64], [ua.VariantType.Boolean])
 
     ts_store = TimeSeriesStorage()
     tsobj = await server.nodes.objects.add_object(idx, 'TimeSeries')
@@ -38,7 +46,6 @@ async def main():
     await cntrl_1.set_writable()
     await cntrl_2.set_writable()
     await cntrl_3.set_writable()
-
     await ts_store.propagate()
 
     _logger.info('Starting server!')
