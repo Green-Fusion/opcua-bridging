@@ -37,6 +37,7 @@ async def browse_nodes(node, to_export=False, path=None):
         var_type = None
     elif node_class == ua.NodeClass.Method:
         _logger.warning("Methods not currently supported")
+        var_type = None
     else:
         try:
             var_type = (await node.read_data_type_as_variant_type())
@@ -118,7 +119,10 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
             return mapping_list
         mapped_id = next_var.nodeid.to_string()
         mapping_list.append((nodes_dict['id'], mapped_id))
+    elif nodes_dict['cls'] in [4, 'Method']:
+        return mapping_list
     else:
+        _logger.warning(nodes_dict['cls'])
         raise NotImplementedError
     return mapping_list
 

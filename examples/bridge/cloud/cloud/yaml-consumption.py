@@ -13,6 +13,7 @@ async def main():
     await bridge_from_yaml(server, '/appdata/test_yaml/test.yaml')
     async with server:
         while True:
+            _logger.warning('server is running')
             await asyncio.sleep(100)
 
 if __name__ == '__main__':

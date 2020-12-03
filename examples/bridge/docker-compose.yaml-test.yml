@@ -6,6 +6,7 @@ services:
       context: ../..
     environment:
       - WAIT_HOSTS=cloud:4840,plc:4840
+      - WAIT_HOSTS_TIMEOUT=90
   cloud:
     build:
       dockerfile: examples/bridge/cloud/yaml-test.Dockerfile
