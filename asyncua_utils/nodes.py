@@ -76,7 +76,6 @@ async def browse_nodes(node, to_export=False, path=None):
             # if the current value is an asyncua object, which isnt yaml'd easily
             del output['current_value']
 
-    await asyncio.sleep(0.25)
     return output
 
 
@@ -141,6 +140,7 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
         mapped_id = next_var.nodeid.to_string()
         mapping_list.append((nodes_dict['id'], mapped_id))
     elif nodes_dict['cls'] in [4, 'Method']:
+        await method_forwarding.make_function_link(node_id, base_object, nodes_dict)
         return mapping_list
     else:
         _logger.warning(nodes_dict['cls'])
@@ -169,7 +169,6 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
         node_type = VariantType[node_type]
 
     if node_type in [VariantType.ExtensionObject, VariantType.Variant]:
-        _logger.warning(f"Extension Objects are not supported by the bridge. Skipping")
         return None
     elif node_dict.get('current_value'):
         original_val = node_dict['current_value']
@@ -178,7 +177,7 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
     elif node_type in [VariantType.Int16, VariantType.UInt16,
                        VariantType.Int32, VariantType.UInt32,
                        VariantType.Int64, VariantType.UInt64,
-                       VariantType.Float]:
+                       VariantType.Float, VariantType.Double]:
         original_val = 0
     elif node_type in [VariantType.String, VariantType.LocalizedText, VariantType.Byte]:
         original_val = ''
@@ -189,3 +188,12 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
         original_val = 0.0
 
     return await base_object.add_variable(node_id, node_name, original_val, node_type)
+
+
+def extract_node_id(node_id_str):
+    regex_string = "i=(\d*)"
+    int_matches = re.findall(regex_string, node_id_str)
+    if len(int_matches) == 1:
+        return int(int_matches[0])
+    else:
+        raise NotImplementedError

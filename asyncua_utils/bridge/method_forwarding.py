@@ -1,5 +1,9 @@
-from asyncua import Client, Server, Node
+from asyncua import Client, Server, Node, ua
 from asyncua_utils.bridge.subscription import ClientServerNodeMapping
+from asyncua.ua.uaprotocol_hand import Argument
+from asyncua.ua.uatypes import NodeId, LocalizedText
+import logging
+from asyncua_utils.nodes import extract_node_id
 
 
 class MethodForwardingHandler:
@@ -9,11 +13,42 @@ class MethodForwardingHandler:
         self._client_server_node_mapper = client_server_node_mapper
         self._function_directory = {}
 
-    async def make_function_link(self, client_node_id: str, server_node: Node):
-        # print(dir(self._client.get_node(client_node_id))
-        method_node = await self._client.nodes.server.add_method()
-        method_node.add_variable()
+    async def make_function_link(self, server_node_id: NodeId, base_node: Node, node_dict: dict):
+        children = node_dict['children']
+        input_args, output_args = await self.get_input_output(children)
+        method_node = await base_node.add_method(server_node_id, node_dict['name'], self.fake_func, input_args, output_args)
+        return method_node.nodeid
+
+    @staticmethod
+    def fake_func(*args):
+        return [ua.Variant(True, ua.VariantType.Boolean)]
+
+    async def get_input_output(self, children: list):
+        input_dicts = [child for child in children if 'Input' in child['name']]
+        if len(input_dicts) != 1:
+            raise KeyError
+
+        input_args = [self.make_argument(arg_dict) for arg_dict in input_dicts[0]['extension_object']]
+        logging.warning(input_args)
+        output_dicts = [child for child in children if 'Output' in child['name']]
+        if len(output_dicts) == 0:
+            output_args = None
+        elif len(output_dicts) == 1:
+            output_args = [self.make_argument(arg_dict) for arg_dict in output_dicts[0]['extension_object']]
+        else:
+            raise KeyError
+
+        return input_args, output_args
+
+    @staticmethod
+    def make_argument(argument_dict):
+        arg = Argument()
+        arg.ArrayDimensions = argument_dict['ArrayDimensions']
+        data_type_node_id = extract_node_id(argument_dict['DataType'])
+        arg.DataType = NodeId(data_type_node_id)
+        arg.ValueRank = argument_dict['ValueRank']
+        arg.Description = LocalizedText(text=argument_dict['Description'], locale='en')
+        return arg
 
     def add_connection(self, server_node_id, client_node_id):
         self._client_server_node_mapper.add_connection(server_node_id, client_node_id)
-
