@@ -23,7 +23,6 @@ async def produce_full_bridge_yaml(connection_list, output_file):
     full_dict = []
     for connection in connection_list:
         full_dict.append(await cloned_namespace_dict(connection))
-
     yaml.dump(full_dict, open(output_file, 'w'))
 
 

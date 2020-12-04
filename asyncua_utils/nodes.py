@@ -2,7 +2,7 @@ import logging
 import asyncua
 from asyncua import ua, Node, Client, Server
 from asyncua.ua.uatypes import VariantType, NodeId
-from asyncua.ua.uaprotocol_auto import NodeClass
+from asyncua.ua.uaprotocol_auto import NodeClass, Argument
 from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid, BadInternalError, \
                                 BadSecurityModeInsufficient, BadNodeIdExists, UaError
 import asyncio
@@ -36,7 +36,7 @@ async def browse_nodes(node, to_export=False, path=None):
     if node_class == ua.NodeClass.Object:
         var_type = None
     elif node_class == ua.NodeClass.Method:
-        _logger.warning("Methods not currently supported")
+        # _logger.warning("Methods not currently supported")
         var_type = None
     else:
         try:
@@ -71,11 +71,31 @@ async def browse_nodes(node, to_export=False, path=None):
         if output['cls']:
             output['cls'] = NodeClass(output['cls']).name
         if output.get('current_value') and check_if_object_is_from_module(output['current_value'], asyncua):
+            extension_dict = handle_asyncua_saving(output['current_value'])
+            output['extension_object'] = extension_dict
             # if the current value is an asyncua object, which isnt yaml'd easily
             del output['current_value']
 
     await asyncio.sleep(0.25)
     return output
+
+
+def handle_asyncua_saving(node_value):
+    if isinstance(node_value, list) and all(isinstance(sub_val, Argument) for sub_val in node_value):
+        return [
+                {
+                    'Type': 'argument',
+                    'Name': sub_val.Name,
+                    'DataType': sub_val.DataType.to_string(),
+                    'ValueRank': sub_val.ValueRank,
+                    'ArrayDimensions': sub_val.ArrayDimensions,
+                    'Description': sub_val.Description.to_string()
+                 }
+                for sub_val in node_value
+            ]
+    else:
+        _logger.warning(f'node value {node_value} not yet supported')
+        return None
 
 
 def check_if_object_is_from_module(obj_val, module):
@@ -93,7 +113,8 @@ def check_if_object_is_from_module(obj_val, module):
         return getattr(obj_val, '__module__', '').startswith(module.__name__)
 
 
-async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_array: list, server: Server):
+async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_array: list, server: Server,
+                      method_forwarding=None):
     mapping_list = []
     node_id = NodeId()  # generate a nodeid to avoid collisions.
     nodes_dict['name'], namespace_idx = await fix_name_and_get_namespace(nodes_dict['name'], client_namespace_array,
@@ -109,7 +130,7 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
                 _logger.warning(f'duplicate node {nodes_dict["name"]}')
                 return mapping_list
             for child in nodes_dict['children']:
-                mapping_list.extend(await clone_nodes(child, next_obj, client_namespace_array, server))
+                mapping_list.extend(await clone_nodes(child, next_obj, client_namespace_array, server, method_forwarding))
         else:
             return mapping_list
     elif nodes_dict['cls'] in [2, 'Variable']:
