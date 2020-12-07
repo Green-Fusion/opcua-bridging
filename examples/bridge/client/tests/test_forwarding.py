@@ -4,6 +4,7 @@ import asyncio
 from asyncua import Client
 from asyncua.crypto.security_policies import SecurityPolicyBasic256Sha256
 import pytest
+from asyncua.ua.uaerrors import BadInvalidArgument
 import random
 
 logging.basicConfig(level=logging.WARNING)
@@ -87,5 +88,5 @@ async def test_function_forwarding(client_cloud: Client):
         out = await client_cloud.nodes.server.call_method(func_node.nodeid, 1)
         assert out is False
 
-        out3 = await client_cloud.nodes.server.call_method(func_node.nodeid, 'hello')
-        print(out3)
+        with pytest.raises(BadInvalidArgument):
+            out3 = await client_cloud.nodes.server.call_method(func_node.nodeid, 'hello')

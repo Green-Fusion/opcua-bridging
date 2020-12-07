@@ -8,4 +8,4 @@ certificates:
   - name: end_user
     role: admin
     certificate_path: /credentials/user_admin_cert.der
-test: true
+test: false

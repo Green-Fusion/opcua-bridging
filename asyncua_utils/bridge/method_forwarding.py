@@ -2,6 +2,8 @@ from asyncua import Client, Server, Node, ua
 from asyncua_utils.bridge.subscription import ClientServerNodeMapping
 from asyncua.ua.uaprotocol_hand import Argument
 from asyncua.ua.uatypes import NodeId, LocalizedText
+from asyncua.ua.uaerrors import UaStatusCodeError
+from asyncua.ua import StatusCode
 import logging
 import pprint
 from asyncua_utils.nodes import extract_node_id
@@ -28,7 +30,12 @@ class MethodForwardingHandler:
         parent = await func_node.get_parent()
 
         async def downstream_func_call(node_id, *args):
-            output = await parent.call_method(func_name, *args)
+            try:
+                output = await parent.call_method(func_name, *args)
+            except UaStatusCodeError as e:
+                status_code = e.code
+                logging.warning(f"method {func_name} failed with status code {status_code}")
+                return StatusCode(status_code)
             if not isinstance(output, list):
                 return [ua.Variant(output)]
             else:

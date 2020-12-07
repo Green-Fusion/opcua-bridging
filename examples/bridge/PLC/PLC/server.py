@@ -2,19 +2,24 @@ import logging
 import asyncio
 
 from asyncua import ua, Server
+from asyncua.ua import Variant, VariantType
 from asyncua.common.methods import uamethod
 from asyncua_utils.server import server_from_yaml
+from asyncua.ua.uaerrors import BadInvalidArgument
 from asyncua.server.users import UserRole
+from asyncua.ua.status_codes import StatusCodes
 
 from PLC.data_fetcher import TimeSeriesStorage
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 _logger = logging.getLogger('asyncua')
 
 
-def func(parent, variant):
+def func(parent, variant: Variant):
     print("func method call with parameters: ", variant.Value)
     ret = False
+    if not isinstance(variant.Value, int):
+        return ua.StatusCode(StatusCodes.BadInvalidArgument)
     if variant.Value % 2 == 0:
         ret = True
     return [ua.Variant(ret, ua.VariantType.Boolean)]
