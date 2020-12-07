@@ -7,4 +7,5 @@ certificates:
     certificate_path: /credentials/cloud_cert.der
   - name: end_user
     role: admin
-    certificate_path: /credentials/user_admin_cert.der
+    certificate_path: /credentials/user_admin_cert.
+test: true

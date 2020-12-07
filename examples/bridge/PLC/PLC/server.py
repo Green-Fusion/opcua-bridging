@@ -8,8 +8,9 @@ from asyncua.server.users import UserRole
 
 from PLC.data_fetcher import TimeSeriesStorage
 
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger('asyncua')
+
 
 def func(parent, variant):
     print("func method call with parameters: ", variant.Value)

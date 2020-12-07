@@ -3,6 +3,7 @@ from asyncua_utils.bridge.subscription import ClientServerNodeMapping
 from asyncua.ua.uaprotocol_hand import Argument
 from asyncua.ua.uatypes import NodeId, LocalizedText
 import logging
+import pprint
 from asyncua_utils.nodes import extract_node_id
 
 
@@ -15,9 +16,24 @@ class MethodForwardingHandler:
 
     async def make_function_link(self, server_node_id: NodeId, base_node: Node, node_dict: dict):
         children = node_dict['children']
+        func_id = node_dict['id']
+        func_name = node_dict['name']
         input_args, output_args = await self.get_input_output(children)
-        method_node = await base_node.add_method(server_node_id, node_dict['name'], self.fake_func, input_args, output_args)
+        mirrored_func = await self.generate_downstream_function(func_id, func_name)
+        method_node = await base_node.add_method(server_node_id, node_dict['name'], mirrored_func, input_args, output_args)
         return method_node.nodeid
+
+    async def generate_downstream_function(self, func_node_id, func_name):
+        func_node = self._client.get_node(func_node_id)
+        parent = await func_node.get_parent()
+
+        async def downstream_func_call(node_id, *args):
+            output = await parent.call_method(func_name, *args)
+            if not isinstance(output, list):
+                return [ua.Variant(output)]
+            else:
+                return output
+        return downstream_func_call
 
     @staticmethod
     def fake_func(*args):

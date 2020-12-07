@@ -20,7 +20,7 @@ async def server_with_certificates(server_url, server_certificate_path, server_p
     """
     # setup our serverclone_and_subscribe(client_node, server_node, sub_handler)
     certificate_handler = CertificateUserManager()
-    if certificates is not None and test is False:
+    if certificates is not None and test is not True:
         for role_add in certificates:
             certificate_path = role_add['certificate_path']
             name = role_add['name']
@@ -57,7 +57,8 @@ async def server_with_certificates(server_url, server_certificate_path, server_p
 async def server_from_yaml(yaml_path):
     out = yaml.safe_load(open(yaml_path, 'r'))
     server, _ = await server_with_certificates(out.get('server_url'), out.get('server_certificate_path'),
-                                               out.get('server_private_key_path'), out.get('certificates'), out.get('test'))
+                                               out.get('server_private_key_path'), out.get('certificates'),
+                                               out.get('test', False))
     return server
 
 if __name__ == '__main__':
