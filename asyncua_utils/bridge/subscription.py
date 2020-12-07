@@ -19,8 +19,27 @@ async def create_simple_bridge(client_node, server_node, sub_handler, subscripti
     await clone_and_subscribe(client, node_dict, server_node, sub_handler, subscription_obj, server)
 
 
+class ClientServerNodeMapping:
+    def __init__(self):
+        self._client_server_mapping = {}
+
+    def add_connection(self, server_node_id, client_node_id):
+        if server_node_id in self._client_server_mapping.keys():
+            _logger.warning(f"node {server_node_id} being assigned multiple times.")
+        self._client_server_mapping[server_node_id] = client_node_id
+
+    def get_server_id(self, client_node_id):
+        keys = [key for key, value in self._client_server_mapping.items() if value == client_node_id]
+        if len(keys) != 1:
+            raise KeyError
+        return keys[0]
+
+    def get_client_id(self, server_node_id):
+        return self._client_server_mapping[server_node_id]
+
+
 class SubscriptionHandler:
-    def __init__(self, client, server):
+    def __init__(self, client: Client, server: Server, client_server_mapping: ClientServerNodeMapping):
         """
         :param client:
         :type client: Client
@@ -29,16 +48,14 @@ class SubscriptionHandler:
         """
         self._client = client
         self._server = server
-        self._client_server_mapping = {}
+        self._client_server_mapping = client_server_mapping
 
     def add_connection(self, server_node_id, client_node_id):
-        if server_node_id in self._client_server_mapping.keys():
-            _logger.warning(f"node {server_node_id} being assigned multiple times.")
-        self._client_server_mapping[server_node_id] = client_node_id
+        self._client_server_mapping.add_connection(server_node_id, client_node_id)
 
     async def datachange_notification(self, node, val, data):
         node_id = node.nodeid.to_string()
-        client_id = self._client_server_mapping.get(node_id)
+        client_id = self._client_server_mapping.get_client_id(node_id)
         if client_id is None:
             _logger.exception(f"mapped connection with host node {node_id} has no mapping in the subscription handler")
             return
@@ -50,13 +67,10 @@ class SubscriptionHandler:
             await client_node.set_value(None)
 
     def server_id_from_client_id(self, client_id):
-        keys = [key for key, value in self._client_server_mapping.items() if value == client_id]
-        if len(keys) != 1:
-            raise KeyError
-        return keys[0]
+        return self._client_server_mapping.get_server_id(client_id)
 
     def client_id_from_server_id(self, server_id):
-        return self._client_server_mapping[server_id]
+        return self._client_server_mapping.get_client_id(server_id)
 
     async def inverse_forwarding(self, event, dispatch):
         response_params = event.response_params
@@ -88,9 +102,9 @@ class SubscriptionHandler:
 
 
 async def clone_and_subscribe(client: Client, node_dict: dict, server_node: Node, sub_handler: SubscriptionHandler,
-                              subscription_obj: Subscription, server_object: Server):
+                              subscription_obj: Subscription, server_object: Server, method_handler):
     namespace_array = await client.get_namespace_array()
-    mapping_list = await clone_nodes(node_dict, server_node, namespace_array, server_object)
+    mapping_list = await clone_nodes(node_dict, server_node, namespace_array, server_object, method_handler)
     subscribe_with_handler_from_list(sub_handler, mapping_list)
     nodes = [client.get_node(srv_node_id) for srv_node_id, _ in mapping_list]
     sub_node_lists = [nodes[x:x + 50] for x in range(0, len(nodes), 50)]

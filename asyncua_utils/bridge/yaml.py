@@ -4,9 +4,10 @@ from asyncua_utils.nodes import browse_nodes
 import logging
 import asyncua
 from asyncua.ua.uatypes import NodeId
-from asyncua_utils.bridge.subscription import SubscriptionHandler
+from asyncua_utils.bridge.subscription import SubscriptionHandler, ClientServerNodeMapping
 from asyncua_utils.bridge import clone_and_subscribe
 from asyncua.crypto.security_policies import SecurityPolicyBasic256Sha256
+from asyncua_utils.bridge.method_forwarding import MethodForwardingHandler
 
 
 async def produce_server_dict(client_node):
@@ -23,7 +24,6 @@ async def produce_full_bridge_yaml(connection_list, output_file):
     full_dict = []
     for connection in connection_list:
         full_dict.append(await cloned_namespace_dict(connection))
-
     yaml.dump(full_dict, open(output_file, 'w'))
 
 
@@ -45,11 +45,13 @@ async def bridge_from_yaml(server_object, server_yaml_file):
                                                  private_key=downstream_opc_server['bridge_private_key'],
                                                  server_certificate=downstream_opc_server['server_certificate'])
         await downstream_client.connect()
-        sub_handler = SubscriptionHandler(downstream_client, server_object)
+        node_mapping = ClientServerNodeMapping()
+        sub_handler = SubscriptionHandler(downstream_client, server_object, node_mapping)
+        method_handler = MethodForwardingHandler(downstream_client, server_object, node_mapping)
         subscription = await downstream_client.create_subscription(5, sub_handler)
         base_object = await server_object.nodes.objects.add_object(NodeId(), downstream_opc_server['name'])
         await clone_and_subscribe(downstream_client, downstream_opc_server['nodes'],
-                                  base_object, sub_handler, subscription, server_object)
+                                  base_object, sub_handler, subscription, server_object, method_handler)
         sub_handler.subscribe_to_writes()
-        sub_list.append((sub_handler, subscription, downstream_client))
+        sub_list.append((sub_handler, subscription, downstream_client, node_mapping))
     return sub_list

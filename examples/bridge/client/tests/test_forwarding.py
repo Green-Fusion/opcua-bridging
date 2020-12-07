@@ -4,6 +4,7 @@ import asyncio
 from asyncua import Client
 from asyncua.crypto.security_policies import SecurityPolicyBasic256Sha256
 import pytest
+from asyncua.ua.uaerrors import BadInvalidArgument
 import random
 
 logging.basicConfig(level=logging.WARNING)
@@ -75,3 +76,17 @@ async def test_forwarding_to_PLC(client_PLC, client_cloud):
                 assert abs(cloud_set_immediate_val - randint) < allowance
                 # if this fails then that write wasnt forwarded.
                 assert abs(PLC_val - cloud_val) < allowance
+
+
+@pytest.mark.asyncio
+async def test_function_forwarding(client_cloud: Client):
+    async with client_cloud:
+        func_node = await client_cloud.nodes.root.get_child(['0:Objects', '0:plc_1', '0:Objects', '0:Controlling', '0:mymethod'])
+        out = await client_cloud.nodes.server.call_method(func_node.nodeid, 6)
+        assert out is True
+
+        out = await client_cloud.nodes.server.call_method(func_node.nodeid, 1)
+        assert out is False
+
+        with pytest.raises(BadInvalidArgument):
+            out3 = await client_cloud.nodes.server.call_method(func_node.nodeid, 'hello')

@@ -14,4 +14,4 @@ before_install:
 jobs:
   include:
     - stage: test
-      script: make test-yml
+      script: make test
