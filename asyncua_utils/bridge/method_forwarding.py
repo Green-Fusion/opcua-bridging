@@ -72,6 +72,3 @@ class MethodForwardingHandler:
         arg.ValueRank = argument_dict['ValueRank']
         arg.Description = LocalizedText(text=argument_dict['Description'], locale='en')
         return arg
-
-    def add_connection(self, server_node_id, client_node_id):
-        self._client_server_node_mapper.add_connection(server_node_id, client_node_id)

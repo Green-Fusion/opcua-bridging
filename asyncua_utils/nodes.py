@@ -36,7 +36,6 @@ async def browse_nodes(node, to_export=False, path=None):
     if node_class == ua.NodeClass.Object:
         var_type = None
     elif node_class == ua.NodeClass.Method:
-        # _logger.warning("Methods not currently supported")
         var_type = None
     else:
         try:
