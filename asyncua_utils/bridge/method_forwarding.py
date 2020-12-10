@@ -17,7 +17,7 @@ class MethodForwardingHandler:
         self._function_directory = {}
 
     async def make_function_link(self, server_node_id: NodeId, base_node: Node, node_dict: dict):
-        children = node_dict['children']
+        children = node_dict.get('children')
         func_id = node_dict['id']
         func_name = node_dict['name']
         input_args, output_args = await self.get_input_output(children)
@@ -47,11 +47,17 @@ class MethodForwardingHandler:
         return [ua.Variant(True, ua.VariantType.Boolean)]
 
     async def get_input_output(self, children: list):
+        if children is None:
+            return None, None
         input_dicts = [child for child in children if 'Input' in child['name']]
-        if len(input_dicts) != 1:
+        if len(input_dicts) > 1:
             raise KeyError
-
-        input_args = [self.make_argument(arg_dict) for arg_dict in input_dicts[0]['extension_object']]
+        elif len(input_dicts) == 0:
+            input_args = None
+        elif input_dicts[0].get('extension_object') is None:
+            input_args = None
+        else:
+            input_args = [self.make_argument(arg_dict) for arg_dict in input_dicts[0]['extension_object']]
         logging.warning(input_args)
         output_dicts = [child for child in children if 'Output' in child['name']]
         if len(output_dicts) == 0:
