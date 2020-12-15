@@ -9,37 +9,36 @@ _logger = logging.getLogger('asyncua')
 
 
 def subscribe_with_handler_from_list(sub_handler, mapping_list):
-    for server_id, client_id in mapping_list:
-        sub_handler.add_connection(server_id, client_id)
+    for map_dict in mapping_list:
+        downstream_id = map_dict['original_id']
+        bridge_id = map_dict['mapped_id']
+        sub_handler.add_connection(downstream_id, bridge_id)
 
 
-async def create_simple_bridge(client_node, server_node, sub_handler, subscription_obj, client):
-    node_dict = await browse_nodes(client_node)
-    raise NotImplementedError
-    await clone_and_subscribe(client, node_dict, server_node, sub_handler, subscription_obj, server)
-
-
-class ClientServerNodeMapping:
+class DownstreamBridgeNodeMapping:
     def __init__(self):
-        self._client_server_mapping = {}
+        self._downstream_bridge_mapping = {}
 
-    def add_connection(self, server_node_id, client_node_id):
-        if server_node_id in self._client_server_mapping.keys():
-            _logger.warning(f"node {server_node_id} being assigned multiple times.")
-        self._client_server_mapping[server_node_id] = client_node_id
+    def add_connection(self, downstream_node_id, bridge_node_id):
+        downstream_node_id = strip_namespace(downstream_node_id)
+        if downstream_node_id in self._downstream_bridge_mapping.keys():
+            _logger.warning(f"node {downstream_node_id} being assigned multiple times.")
+        self._downstream_bridge_mapping[downstream_node_id] = bridge_node_id
 
-    def get_server_id(self, client_node_id):
-        keys = [key for key, value in self._client_server_mapping.items() if value == client_node_id]
+    def get_downstream_id(self, bridge_node_id):
+        keys = [key for key, value in self._downstream_bridge_mapping.items() if value == bridge_node_id]
         if len(keys) != 1:
             raise KeyError
         return keys[0]
 
-    def get_client_id(self, server_node_id):
-        return self._client_server_mapping[server_node_id]
+    def get_bridge_id(self, downstream_node_id):
+
+        downstream_node_id = strip_namespace(downstream_node_id)
+        return self._downstream_bridge_mapping.get(downstream_node_id)
 
 
 class SubscriptionHandler:
-    def __init__(self, client: Client, server: Server, client_server_mapping: ClientServerNodeMapping):
+    def __init__(self, client: Client, server: Server, client_server_mapping: DownstreamBridgeNodeMapping):
         """
         :param client:
         :type client: Client
@@ -55,7 +54,7 @@ class SubscriptionHandler:
 
     async def datachange_notification(self, node, val, data):
         node_id = node.nodeid.to_string()
-        client_id = self._client_server_mapping.get_client_id(node_id)
+        client_id = self._client_server_mapping.get_bridge_id(node_id)
         if client_id is None:
             _logger.exception(f"mapped connection with host node {node_id} has no mapping in the subscription handler")
             return
@@ -67,10 +66,10 @@ class SubscriptionHandler:
             await client_node.set_value(None)
 
     def server_id_from_client_id(self, client_id):
-        return self._client_server_mapping.get_server_id(client_id)
+        return self._client_server_mapping.get_downstream_id(client_id)
 
     def client_id_from_server_id(self, server_id):
-        return self._client_server_mapping.get_client_id(server_id)
+        return self._client_server_mapping.get_bridge_id(server_id)
 
     async def inverse_forwarding(self, event, dispatch):
         response_params = event.response_params
@@ -106,7 +105,18 @@ async def clone_and_subscribe(client: Client, node_dict: dict, server_node: Node
     namespace_array = await client.get_namespace_array()
     mapping_list = await clone_nodes(node_dict, server_node, namespace_array, server_object, method_handler)
     subscribe_with_handler_from_list(sub_handler, mapping_list)
-    nodes = [client.get_node(srv_node_id) for srv_node_id, _ in mapping_list]
-    sub_node_lists = [nodes[x:x + 50] for x in range(0, len(nodes), 50)]
+    var_nodes = [client.get_node(elem['original_id']) for elem in mapping_list if elem['type'] == 'Variable']
+    sub_node_lists = [var_nodes[x:x + 50] for x in range(0, len(var_nodes), 50)]
     for node_list in sub_node_lists:
         await subscription_obj.subscribe_data_change(node_list)
+    return mapping_list
+
+
+def strip_namespace(node_id_str: str):
+    potential_strs = node_id_str.split(';')
+    potential_strs = [sub_str for sub_str in potential_strs if not sub_str.startswith('ns=')]
+    if len(potential_strs) == 1:
+        return potential_strs[0]
+    else:
+        _logger.warning(f"node_id:{node_id_str} ill-served by strip_namespace")
+        raise NotImplementedError

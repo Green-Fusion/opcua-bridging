@@ -31,6 +31,19 @@ async def browse_nodes(node: Node, to_export=False, path=None):
         path.append(node_name)
 
     node_children = await node.get_children()
+    if len(node_children) > 0:
+        node_children_descriptions = await node.get_children_descriptions()
+        notallowed_objectids = [ua.ObjectIds.HasNotifier]
+
+        allowed = [child_desc.NodeId for child_desc in node_children_descriptions if
+                      child_desc.ReferenceTypeId.Identifier not in notallowed_objectids]
+
+        node_children = [child for child in node_children if child.nodeid in allowed]
+
+    node_children = set(node_children)
+    if 'MyObjects' in node_name:
+        _logger.warning(path)
+        _logger.warning('HAPPENING HERE')
     for child in node_children:
         if await child.read_node_class() in [ua.NodeClass.Object, ua.NodeClass.Variable, ua.NodeClass.Method]:
             children.append(
@@ -115,7 +128,7 @@ def handle_asyncua_saving(node_value):
                 for sub_val in node_value
             ]
     else:
-        _logger.warning(f'node value {node_value} not yet supported')
+        _logger.info(f'node value {node_value} not yet supported')
         return None
 
 
@@ -168,16 +181,16 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
         if next_var is None:
             return mapping_list
         mapped_id = next_var.nodeid.to_string()
-        mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': mapped_id, 'type': 'Variable'})
+        mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': mapped_id, 'type': 'Variable',
+                             'references': nodes_dict['references']})
     elif nodes_dict['cls'] in [4, 'Method']:
         mapped_node_id = await method_forwarding.make_function_link(node_id, base_object, nodes_dict)
-        mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': mapped_node_id.to_string(), 'type': 'Method' })
+        mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': mapped_node_id.to_string(), 'type': 'Method',
+                             'references': nodes_dict['references']})
         return mapping_list
     else:
         _logger.warning(nodes_dict['cls'])
         raise NotImplementedError
-    if nodes_dict['name'] == '0:FalseState':
-        print('here')
     return mapping_list
 
 

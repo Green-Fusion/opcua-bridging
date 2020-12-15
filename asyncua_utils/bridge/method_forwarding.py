@@ -1,5 +1,5 @@
 from asyncua import Client, Server, Node, ua
-from asyncua_utils.bridge.subscription import ClientServerNodeMapping
+from asyncua_utils.bridge.subscription import DownstreamBridgeNodeMapping
 from asyncua.ua.uaprotocol_hand import Argument
 from asyncua.ua.uatypes import NodeId, LocalizedText
 from asyncua.ua.uaerrors import UaStatusCodeError
@@ -10,7 +10,7 @@ from asyncua_utils.nodes import extract_node_id
 
 
 class MethodForwardingHandler:
-    def __init__(self, client: Client, server: Server, client_server_node_mapper: ClientServerNodeMapping):
+    def __init__(self, client: Client, server: Server, client_server_node_mapper: DownstreamBridgeNodeMapping):
         self._client = client
         self._server = server
         self._client_server_node_mapper = client_server_node_mapper
