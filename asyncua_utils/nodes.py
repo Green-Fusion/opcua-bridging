@@ -156,16 +156,22 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
 
     if nodes_dict['cls'] in [1, 'Object']:
         # node is an object
-        if 'AddComment' in nodes_dict['name']:
-            logging.warning('help')
-            exit(1)
+
         if nodes_dict.get('children'):
             try:
-                next_obj = await base_object.add_object(node_id, nodes_dict['name'],
-                                                        objecttype=None)
                 node_type = nodes_dict.get('type_definition')
-                if node_type:
-                    await next_obj.add_reference(node_type, reftype='i=40')
+                if extract_node_id(node_type) == ua.object_ids.ObjectIds.FolderType:
+                    # folder has to be added as folder
+                    next_obj = await base_object.add_object(node_id, nodes_dict['name'],
+                                                        objecttype=node_type)
+                else:
+                    next_obj = await base_object.add_object(node_id, nodes_dict['name'],
+                                                            objecttype=None)
+                    if node_type:
+                        # we do this, otherwise a load of junk gets added.
+                        await next_obj.add_reference(node_type, reftype='i=40')
+                        await next_obj.delete_reference(ua.object_ids.ObjectIds.BaseObjectType, reftype='i=40')
+
             except BadNodeIdExists as e:
                 _logger.warning(f'duplicate node {nodes_dict["name"]}')
                 return mapping_list

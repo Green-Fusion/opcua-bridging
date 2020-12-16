@@ -3,7 +3,7 @@ import yaml
 from asyncua_utils.nodes import browse_nodes
 import logging
 import asyncua
-from asyncua import Server
+from asyncua import Server, Client
 from asyncua.ua.uatypes import NodeId
 from asyncua_utils.bridge.subscription import SubscriptionHandler, DownstreamBridgeNodeMapping
 from asyncua_utils.bridge import clone_and_subscribe
@@ -29,6 +29,11 @@ async def produce_full_bridge_yaml(connection_list, output_file):
         full_dict.append(await cloned_namespace_dict(connection))
     yaml.dump(full_dict, open(output_file, 'w'))
 
+async def add_server_as_notifier(downstream_server: Client, bridge_server: Server,
+                                 node_mapping: DownstreamBridgeNodeMapping):
+    downstream_server_node_id = node_mapping.get_bridge_id(downstream_server.nodes.server.nodeid.to_string())
+    await bridge_server.nodes.server.add_reference(downstream_server_node_id,
+                                                   reftype=asyncua.ua.ObjectIds.HasNotifier)
 
 async def bridge_from_yaml(server_object, server_yaml_file):
     """
@@ -56,6 +61,7 @@ async def bridge_from_yaml(server_object, server_yaml_file):
         node_mapping_list = await clone_and_subscribe(downstream_client, downstream_opc_server['nodes'],
                                   base_object, sub_handler, subscription, server_object, method_handler)
         await apply_references(server_object, node_mapping_list, node_mapping)
+        await add_server_as_notifier(downstream_client, server_object, node_mapping)
         sub_handler.subscribe_to_writes()
         sub_list.append({'sub_handler': sub_handler, 'subscription': subscription,
                          'downstream_client': downstream_client, 'node_mapping': node_mapping})
