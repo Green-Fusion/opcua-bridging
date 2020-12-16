@@ -67,11 +67,16 @@ async def apply_references(server: Server, node_mapping_list: list, node_mapping
         references = node_dict['references']
         original_node = server.get_node(node_dict['mapped_id'])
         for ref in references:
-            if extract_node_id(ref['refTypeId']) in [asyncua.ua.object_ids.ObjectIds.HasProperty,
-                                    asyncua.ua.object_ids.ObjectIds.HasComponent]:
-                logging.warning('happening')
-                continue
+            # if extract_node_id(ref['refTypeId']) in [asyncua.ua.object_ids.ObjectIds.HasProperty,
+            #                         asyncua.ua.object_ids.ObjectIds.HasComponent]:
+            #     continue
             new_target = node_mapping.get_bridge_id(ref['target'])
             if new_target is not None:
-                await original_node.add_reference(target=new_target, reftype=ref['refTypeId'],
+                try:
+                    if ref['refTypeId'] == asyncua.ua.object_ids.ObjectIds.HasTypeDefinition:
+                        continue
+                    await original_node.add_reference(target=new_target, reftype=ref['refTypeId'],
                                             forward=ref['isForward'])
+                except:
+                    logging.warning(ref['refTypeId'])
+                    logging.warning(ref)

@@ -156,19 +156,21 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
 
     if nodes_dict['cls'] in [1, 'Object']:
         # node is an object
-
+        if 'AddComment' in nodes_dict['name']:
+            logging.warning('help')
+            exit(1)
         if nodes_dict.get('children'):
             try:
-                node_type = extract_node_id(nodes_dict.get('type_definition'))
                 next_obj = await base_object.add_object(node_id, nodes_dict['name'],
-                                                        objecttype=node_type)
+                                                        objecttype=None)
+                node_type = nodes_dict.get('type_definition')
+                if node_type:
+                    await next_obj.add_reference(node_type, reftype='i=40')
             except BadNodeIdExists as e:
                 _logger.warning(f'duplicate node {nodes_dict["name"]}')
                 return mapping_list
             except RuntimeError as e:
                 _logger.warning(f'node type {node_type} not supported')
-                next_obj = await base_object.add_object(node_id, nodes_dict['name'],
-                                                        objecttype=None)
             mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': next_obj.nodeid.to_string(),
                                  'type': 'Object', 'references': nodes_dict['references']})
             for child in nodes_dict['children']:
@@ -211,7 +213,6 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
     node_name = node_dict['name']
     node_type = node_dict.get('type')
     data_type = extract_node_id(node_dict.get('type_definition'))
-
     if isinstance(node_type, str):
         node_type = VariantType[node_type]
 
@@ -240,13 +241,12 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
         _logger.warning(f"node type {node_type} not covered by add_variable")
         original_val = 0.0
 
-    new_var = await base_object.add_variable(node_id, node_name, original_val, varianttype=node_type,
-                                             datatype=data_type)
+    if data_type == asyncua.ua.ObjectIds.PropertyType:
+        new_var = await base_object.add_property(node_id, node_name, original_val, varianttype=node_type)
+    else:
+        new_var = await base_object.add_variable(node_id, node_name, original_val, varianttype=node_type,
+                                                 datatype=data_type)
 
-
-    if node_type in [VariantType.StatusCode, VariantType.NodeId]:
-        print(new_var)
-        print('here2')
     return new_var
 
 

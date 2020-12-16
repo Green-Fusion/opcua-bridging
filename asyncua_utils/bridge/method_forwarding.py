@@ -58,7 +58,6 @@ class MethodForwardingHandler:
             input_args = None
         else:
             input_args = [self.make_argument(arg_dict) for arg_dict in input_dicts[0]['extension_object']]
-        logging.warning(input_args)
         output_dicts = [child for child in children if 'Output' in child['name']]
         if len(output_dicts) == 0:
             output_args = None
