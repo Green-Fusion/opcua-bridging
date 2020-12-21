@@ -1,10 +1,12 @@
 import logging
 import asyncua
 from asyncua import ua, Node, Client, Server
-from asyncua.ua.uatypes import VariantType, NodeId, Variant, LocalizedText
+from asyncua.ua.uatypes import VariantType, NodeId, Variant, LocalizedText, StatusCode
 from asyncua.ua.uaprotocol_auto import NodeClass, Argument
 from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid, BadInternalError, \
-                                BadSecurityModeInsufficient, BadNodeIdExists, UaError
+                                BadSecurityModeInsufficient, BadNodeIdExists, UaError, \
+                                BadBrowseNameDuplicated
+from asyncua.ua.status_codes import StatusCodes
 import asyncio
 import datetime
 from copy import deepcopy
@@ -157,40 +159,48 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
     if nodes_dict['cls'] in [1, 'Object']:
         # node is an object
 
-        if nodes_dict.get('children'):
-            try:
-                node_type = nodes_dict.get('type_definition')
-                if extract_node_id(node_type) == ua.object_ids.ObjectIds.FolderType:
-                    # folder has to be added as folder
-                    next_obj = await base_object.add_object(node_id, nodes_dict['name'],
+        try:
+            node_type = nodes_dict.get('type_definition')
+            if extract_node_id(node_type) == ua.object_ids.ObjectIds.FolderType:
+                # folder has to be added as folder
+                next_obj = await base_object.add_object(node_id, nodes_dict['name'],
                                                         objecttype=node_type)
-                else:
-                    next_obj = await base_object.add_object(node_id, nodes_dict['name'],
-                                                            objecttype=None)
-                    if node_type:
-                        # we do this, otherwise a load of junk gets added.
-                        await next_obj.add_reference(node_type, reftype='i=40')
-                        await next_obj.delete_reference(ua.object_ids.ObjectIds.BaseObjectType, reftype='i=40')
+            else:
+                next_obj = await base_object.add_object(node_id, nodes_dict['name'],
+                                                        objecttype=None)
 
-            except BadNodeIdExists as e:
-                _logger.warning(f'duplicate node {nodes_dict["name"]}')
-                return mapping_list
-            except RuntimeError as e:
-                _logger.warning(f'node type {node_type} not supported')
-            mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': next_obj.nodeid.to_string(),
-                                 'type': 'Object', 'references': nodes_dict['references']})
+                if node_type:
+                    # we do this, otherwise a load of junk gets added.
+                    await next_obj.add_reference(node_type, reftype='i=40')
+                    await next_obj.delete_reference(ua.object_ids.ObjectIds.BaseObjectType, reftype='i=40')
+
+        except (BadNodeIdExists, BadBrowseNameDuplicated) as e:
+            _logger.warning(f'duplicate node {nodes_dict["name"]}')
+            return mapping_list
+        except RuntimeError as e:
+            _logger.warning(e)
+            _logger.warning(f'node type {node_type} not supported')
+
+        mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': next_obj.nodeid.to_string(),
+                             'type': 'Object', 'references': nodes_dict['references']})
+        if nodes_dict.get('children'):
             for child in nodes_dict['children']:
                 mapping_list.extend(await clone_nodes(child, next_obj, client_namespace_array, server, method_forwarding))
         else:
             return mapping_list
     elif nodes_dict['cls'] in [2, 'Variable']:
         # node is a variable
-        next_var = await add_variable(base_object, nodes_dict, node_id)
-        if next_var is None:
+        next_obj = await add_variable(base_object, nodes_dict, node_id)
+        if next_obj is None:
             return mapping_list
-        mapped_id = next_var.nodeid.to_string()
+        mapped_id = next_obj.nodeid.to_string()
         mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': mapped_id, 'type': 'Variable',
                              'references': nodes_dict['references']})
+        if nodes_dict.get('children'):
+            for child in nodes_dict['children']:
+                mapping_list.extend(await clone_nodes(child, next_obj, client_namespace_array, server, method_forwarding))
+        else:
+            return mapping_list
     elif nodes_dict['cls'] in [4, 'Method']:
         mapped_node_id = await method_forwarding.make_function_link(node_id, base_object, nodes_dict)
         mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': mapped_node_id.to_string(), 'type': 'Method',
@@ -240,7 +250,7 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
     elif node_type == VariantType.DateTime:
         original_val = datetime.datetime.today()
     elif node_type == VariantType.StatusCode:
-        original_val = 0
+        original_val = StatusCode(StatusCodes.Uncertain)
     elif node_type == VariantType.NodeId:
         original_val = 0
     else:
