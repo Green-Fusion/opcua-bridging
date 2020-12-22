@@ -1,7 +1,8 @@
 import logging
 import asyncio
 
-from asyncua import Client
+from asyncua import Client, ua
+from asyncua.common.events import Event
 from asyncua.crypto.security_policies import SecurityPolicyBasic256Sha256
 import pytest
 from asyncua.ua.uaerrors import BadInvalidArgument
@@ -90,3 +91,22 @@ async def test_function_forwarding(client_cloud: Client):
 
         with pytest.raises(BadInvalidArgument):
             out3 = await client_cloud.nodes.server.call_method(func_node.nodeid, 'hello')
+
+
+@pytest.mark.asyncio
+async def test_alarm_forwarding(client_cloud: Client):
+    async with client_cloud:
+
+        class SubHandler:
+            alert_received = False
+
+            def event_notification(self, event: Event):
+                self.alert_received = True
+
+        sub_handler = SubHandler()
+        subscription = await client_cloud.create_subscription(5, sub_handler)
+        await subscription.subscribe_events(client_cloud.nodes.server, ua.ObjectIds.OffNormalAlarmType)
+
+        await asyncio.sleep(2)
+
+        assert sub_handler.alert_received

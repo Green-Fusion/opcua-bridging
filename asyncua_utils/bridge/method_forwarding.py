@@ -1,23 +1,23 @@
 from asyncua import Client, Server, Node, ua
-from asyncua_utils.bridge.subscription import ClientServerNodeMapping
+from asyncua_utils.bridge.node_mapping import DownstreamBridgeNodeMapping
 from asyncua.ua.uaprotocol_hand import Argument
 from asyncua.ua.uatypes import NodeId, LocalizedText
 from asyncua.ua.uaerrors import UaStatusCodeError
 from asyncua.ua import StatusCode
 import logging
 import pprint
-from asyncua_utils.nodes import extract_node_id
+from asyncua_utils.node_utils import extract_node_id
 
 
 class MethodForwardingHandler:
-    def __init__(self, client: Client, server: Server, client_server_node_mapper: ClientServerNodeMapping):
+    def __init__(self, client: Client, server: Server, client_server_node_mapper: DownstreamBridgeNodeMapping):
         self._client = client
         self._server = server
         self._client_server_node_mapper = client_server_node_mapper
         self._function_directory = {}
 
     async def make_function_link(self, server_node_id: NodeId, base_node: Node, node_dict: dict):
-        children = node_dict['children']
+        children = node_dict.get('children')
         func_id = node_dict['id']
         func_name = node_dict['name']
         input_args, output_args = await self.get_input_output(children)
@@ -47,12 +47,17 @@ class MethodForwardingHandler:
         return [ua.Variant(True, ua.VariantType.Boolean)]
 
     async def get_input_output(self, children: list):
+        if children is None:
+            return None, None
         input_dicts = [child for child in children if 'Input' in child['name']]
-        if len(input_dicts) != 1:
+        if len(input_dicts) > 1:
             raise KeyError
-
-        input_args = [self.make_argument(arg_dict) for arg_dict in input_dicts[0]['extension_object']]
-        logging.warning(input_args)
+        elif len(input_dicts) == 0:
+            input_args = None
+        elif input_dicts[0].get('extension_object') is None:
+            input_args = None
+        else:
+            input_args = [self.make_argument(arg_dict) for arg_dict in input_dicts[0]['extension_object']]
         output_dicts = [child for child in children if 'Output' in child['name']]
         if len(output_dicts) == 0:
             output_args = None
