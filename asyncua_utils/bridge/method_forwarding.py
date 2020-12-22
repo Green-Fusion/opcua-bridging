@@ -1,12 +1,12 @@
 from asyncua import Client, Server, Node, ua
-from asyncua_utils.bridge.subscription import DownstreamBridgeNodeMapping
+from asyncua_utils.bridge.node_mapping import DownstreamBridgeNodeMapping
 from asyncua.ua.uaprotocol_hand import Argument
 from asyncua.ua.uatypes import NodeId, LocalizedText
 from asyncua.ua.uaerrors import UaStatusCodeError
 from asyncua.ua import StatusCode
 import logging
 import pprint
-from asyncua_utils.nodes import extract_node_id
+from asyncua_utils.node_utils import extract_node_id
 
 
 class MethodForwardingHandler:

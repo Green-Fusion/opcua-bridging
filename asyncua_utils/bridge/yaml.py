@@ -5,12 +5,15 @@ import logging
 import asyncua
 from asyncua import Server, Client
 from asyncua.ua.uatypes import NodeId
-from asyncua_utils.bridge.subscription import SubscriptionHandler, DownstreamBridgeNodeMapping
+from asyncua_utils.bridge.subscription import SubscriptionHandler
+from asyncua_utils.bridge.node_mapping import DownstreamBridgeNodeMapping
+from asyncua_utils.bridge.alarms import AlarmHandler
 from asyncua_utils.bridge import clone_and_subscribe
 from asyncua.crypto.security_policies import SecurityPolicyBasic256Sha256
 from asyncua_utils.bridge.method_forwarding import MethodForwardingHandler
-from asyncua_utils.nodes import extract_node_id
+from asyncua_utils.node_utils import extract_node_id
 from asyncua.server.address_space import AddressSpace
+from asyncua import ua
 from tqdm import tqdm
 
 
@@ -37,9 +40,11 @@ async def add_server_as_notifier(downstream_server: Client, bridge_server: Serve
     await bridge_server.nodes.server.add_reference(downstream_server_node_id,
                                                    reftype=asyncua.ua.ObjectIds.HasNotifier)
 
+
 def get_nodeid_list(aspace: AddressSpace):
     aspace_list = [a.to_string() for a in aspace.keys()]
     return aspace_list
+
 
 async def bridge_from_yaml(server_object, server_yaml_file):
     """
@@ -64,11 +69,11 @@ async def bridge_from_yaml(server_object, server_yaml_file):
         sub_handler = SubscriptionHandler(downstream_client, server_object, node_mapping)
         method_handler = MethodForwardingHandler(downstream_client, server_object, node_mapping)
         subscription = await downstream_client.create_subscription(5, sub_handler)
+        await subscription.subscribe_events(downstream_client.nodes.server, ua.ObjectIds.OffNormalAlarmType)
         base_object = await server_object.nodes.objects.add_object(NodeId(), downstream_opc_server['name'])
         node_mapping_list = await clone_and_subscribe(downstream_client, downstream_opc_server['nodes'],
                                   base_object, sub_handler, subscription, server_object, method_handler)
         await apply_references(server_object, node_mapping_list, node_mapping)
-        await add_server_as_notifier(downstream_client, server_object, node_mapping)
         sub_handler.subscribe_to_writes()
         sub_list.append({'sub_handler': sub_handler, 'subscription': subscription,
                          'downstream_client': downstream_client, 'node_mapping': node_mapping})

@@ -1,11 +1,14 @@
-from asyncua_utils.nodes import browse_nodes, clone_nodes
+from asyncua_utils.bridge.node_mapping import DownstreamBridgeNodeMapping
+from asyncua_utils.nodes import clone_nodes
 from asyncua import Client, Server, Node
 from asyncua.common.subscription import Subscription
+from asyncua.common.events import Event
+from asyncua_utils.bridge.alarms import AlarmHandler
 import logging
 from asyncua.common.callback import CallbackType
 import asyncua.ua.uaerrors
 
-_logger = logging.getLogger('asyncua')
+_logger = logging.getLogger('opcua_bridge')
 
 
 def subscribe_with_handler_from_list(sub_handler, mapping_list):
@@ -15,43 +18,10 @@ def subscribe_with_handler_from_list(sub_handler, mapping_list):
         sub_handler.add_connection(downstream_id, bridge_id)
 
 
-class DownstreamBridgeNodeMapping:
-    def __init__(self, initial_nodes: dict):
-        self._downstream_bridge_mapping = {}
-        self.setup_types(initial_nodes)
-
-    def setup_types(self, initial_nodes: dict):
-        """
-        function to add all of the object types into the node mapping. This means in practice that the bridged items will
-        use types defined in the bridge instead of requiring their type directories also mirrored.
-        """
-        # object_ids = asyncua.ua.object_ids.ObjectIds.__dict__
-        [self.add_connection(node_id, node_id) for node_id in initial_nodes]
-        logging.warning('type cloning done')
-
-    def add_connection(self, downstream_node_id, bridge_node_id):
-        downstream_node_id = strip_namespace(downstream_node_id)
-        if downstream_node_id in self._downstream_bridge_mapping.keys():
-            _logger.warning(f"node {downstream_node_id} being assigned multiple times.")
-        self._downstream_bridge_mapping[downstream_node_id] = bridge_node_id
-
-    def get_downstream_id(self, bridge_node_id):
-        keys = [key for key, value in self._downstream_bridge_mapping.items() if value == bridge_node_id]
-        if len(keys) != 1:
-            _logger.warning(keys)
-            _logger.warning(bridge_node_id)
-            raise KeyError
-        return keys[0]
-
-    def get_bridge_id(self, downstream_node_id):
-
-        downstream_node_id = strip_namespace(downstream_node_id)
-        return self._downstream_bridge_mapping.get(downstream_node_id)
-
-
 class SubscriptionHandler:
     def __init__(self, client: Client, server: Server, client_server_mapping: DownstreamBridgeNodeMapping):
         """
+        TODO: refactor to have a datachange component and a event component
         :param client:
         :type client: Client
         :param server:
@@ -60,6 +30,7 @@ class SubscriptionHandler:
         self._client = client
         self._server = server
         self._client_server_mapping = client_server_mapping
+        self._alarm_handler = AlarmHandler(client, server, client_server_mapping)
 
     def add_connection(self, server_node_id, client_node_id):
         self._client_server_mapping.add_connection(server_node_id, client_node_id)
@@ -76,6 +47,9 @@ class SubscriptionHandler:
         except asyncua.ua.uaerrors.UaError:
             _logger.warning(f"client node {node_id} tried to set a bad value of {val} and instead has been nullified")
             await client_node.set_value(None)
+
+    async def event_notification(self, event: Event):
+        return await self._alarm_handler.event_notification(event)
 
     def server_id_from_client_id(self, client_id):
         return self._client_server_mapping.get_downstream_id(client_id)
@@ -124,11 +98,3 @@ async def clone_and_subscribe(client: Client, node_dict: dict, server_node: Node
     return mapping_list
 
 
-def strip_namespace(node_id_str: str):
-    potential_strs = node_id_str.split(';')
-    potential_strs = [sub_str for sub_str in potential_strs if not sub_str.startswith('ns=')]
-    if len(potential_strs) == 1:
-        return potential_strs[0]
-    else:
-        _logger.warning(f"node_id:{node_id_str} ill-served by strip_namespace")
-        raise NotImplementedError
