@@ -179,6 +179,7 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
         except RuntimeError as e:
             _logger.warning(e)
             _logger.warning(f'node type {node_type} not supported')
+            return mapping_list
 
         mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': next_obj.nodeid.to_string(),
                              'type': 'Object', 'references': nodes_dict['references']})
