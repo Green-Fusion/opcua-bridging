@@ -1,20 +1,19 @@
 import logging
 import asyncua
-from asyncua import ua, Node, Client, Server
-from asyncua.ua.uatypes import VariantType, NodeId, Variant, LocalizedText, StatusCode
+from asyncua import ua, Node, Server
+from asyncua.ua.uatypes import VariantType, NodeId, LocalizedText, StatusCode
 from asyncua.ua.uaprotocol_auto import NodeClass, Argument
 from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid, BadInternalError, \
                                 BadSecurityModeInsufficient, BadNodeIdExists, UaError, \
                                 BadBrowseNameDuplicated
 from asyncua.ua.status_codes import StatusCodes
-import asyncio
 import datetime
 from copy import deepcopy
 import re
 from typing import Union
 import uuid
-import pprint as pp
 
+from asyncua_utils.node_utils import extract_node_id
 
 _logger = logging.getLogger('asyncua')
 
@@ -264,14 +263,3 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
                                                  datatype=data_type)
 
     return new_var
-
-
-def extract_node_id(node_id_str):
-    if node_id_str is None:
-        return None
-    regex_string = "i=(\d*)"
-    int_matches = re.findall(regex_string, node_id_str)
-    if len(int_matches) == 1:
-        return int(int_matches[0])
-    else:
-        raise NotImplementedError
