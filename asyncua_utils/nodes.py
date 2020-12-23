@@ -177,9 +177,12 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
             _logger.warning(f'duplicate node {nodes_dict["name"]}')
             return mapping_list
         except RuntimeError as e:
+            # TODO: deal with node types which are inherited
             _logger.warning(e)
             _logger.warning(f'node type {node_type} not supported')
-            next_obj = await base_object.add_object(node_id, nodes_dict['name'],
+            next_obj = await base_object.get_child(nodes_dict['name'])
+            if next_obj is None:
+                next_obj = await base_object.add_object(node_id, nodes_dict['name'],
                                                     objecttype=None)
 
         mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': next_obj.nodeid.to_string(),
