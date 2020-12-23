@@ -180,10 +180,11 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
             # TODO: deal with node types which are inherited
             _logger.warning(e)
             _logger.warning(f'node type {node_type} not supported')
-            next_obj = await base_object.get_child(nodes_dict['name'])
-            if next_obj is None:
+            try:
+                next_obj = await base_object.get_child(nodes_dict['name'])
+            except ua.uaerrors.BadNoMatch:
                 next_obj = await base_object.add_object(node_id, nodes_dict['name'],
-                                                    objecttype=None)
+                                                        objecttype=None)
 
         mapping_list.append({'original_id': nodes_dict['id'], 'mapped_id': next_obj.nodeid.to_string(),
                              'type': 'Object', 'references': nodes_dict['references']})
