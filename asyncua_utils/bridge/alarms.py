@@ -20,6 +20,7 @@ class AlarmHandler:
         alarm_gen = await self._server.get_event_generator(event.EventType, emitting_node=ua.ObjectIds.Server)
         alarm_gen.event = event
         await alarm_gen.trigger()
+        logging.warning('event notification sent')
 
     async def get_existing_alarms(self, subscription_id):
         refresh_node = self._client.get_node('i=3875')
