@@ -24,6 +24,7 @@ class AlarmHandler:
 
     async def get_existing_alarms(self, subscription_id):
         refresh_node = self._client.get_node('i=3875')
+        logging.warning('refresh taking place')
         logging.warning(subscription_id)
         try:
             await self._server.nodes.server.call_method(refresh_node, Variant(int(subscription_id),

@@ -70,12 +70,12 @@ async def bridge_from_yaml(server_object, server_yaml_file):
         method_handler = MethodForwardingHandler(downstream_client, server_object, node_mapping)
         subscription = await downstream_client.create_subscription(5, sub_handler)
         await subscription.subscribe_events(downstream_client.nodes.server, ua.ObjectIds.OffNormalAlarmType)
-        await sub_handler.start(subscription.subscription_id)
         base_object = await server_object.nodes.objects.add_object(NodeId(), downstream_opc_server['name'])
         node_mapping_list = await clone_and_subscribe(downstream_client, downstream_opc_server['nodes'],
                                   base_object, sub_handler, subscription, server_object, method_handler)
         await apply_references(server_object, node_mapping_list, node_mapping)
         sub_handler.subscribe_to_writes()
+        await sub_handler.start(subscription.subscription_id)
         sub_list.append({'sub_handler': sub_handler, 'subscription': subscription,
                          'downstream_client': downstream_client, 'node_mapping': node_mapping})
     return sub_list
