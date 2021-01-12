@@ -12,8 +12,15 @@ class AlarmHandler:
         self._client = downstream_client
         self._server = bridge_server
         self._node_mapping = node_mapping
+        self.subscription_id = None
 
-    async def start(self, subscription_id):
+    async def start(self, subscription_id: None):
+        if subscription_id is None and self.subscription_id is None:
+            raise KeyError
+        elif subscription_id is not None:
+            self.subscription_id = subscription_id
+        else:
+            subscription_id = self.subscription_id
         await self.get_existing_alarms(subscription_id)
 
     async def event_notification(self, event: Event):

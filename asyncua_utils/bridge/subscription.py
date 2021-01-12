@@ -35,7 +35,7 @@ class SubscriptionHandler:
     def add_connection(self, server_node_id, client_node_id):
         self._client_server_mapping.add_connection(server_node_id, client_node_id)
 
-    async def start(self, subscription_id):
+    async def start(self, subscription_id=None):
         await self._alarm_handler.start(subscription_id)
 
     async def datachange_notification(self, node, val, data):
