@@ -29,7 +29,6 @@ class AlarmHandler:
                                                            notifier_path=[ua.ObjectIds.Server])
         alarm_gen = self.safe_event_clone(event, alarm_gen)
         await alarm_gen.trigger()
-        logging.warning('event notification sent')
 
     @staticmethod
     def safe_event_clone(event, alarm_gen):
@@ -41,8 +40,7 @@ class AlarmHandler:
     async def get_existing_alarms(self, subscription_id):
         refresh_node = self._client.get_node('i=3875')
         condition_node = self._client.get_node('i=2782')
-        logging.warning('refresh taking place')
-        logging.warning(subscription_id)
+
         try:
             await condition_node.call_method(refresh_node, Variant(int(subscription_id),
                                                                                 varianttype=VariantType.UInt32))
