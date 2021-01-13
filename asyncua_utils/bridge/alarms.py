@@ -24,10 +24,20 @@ class AlarmHandler:
         await self.get_existing_alarms(subscription_id)
 
     async def event_notification(self, event: Event):
-        alarm_gen = await self._server.get_event_generator(event.EventType, emitting_node=ua.ObjectIds.Server)
+        alarm_gen = await self._server.get_event_generator(self._server.get_node(event.EventType),
+                                                           emitting_node=ua.ObjectIds.Server,
+                                                           notifier_path=[ua.ObjectIds.Server])
         alarm_gen.event = event
+        alarm_gen = self.safe_event_clone(event, alarm_gen)
         await alarm_gen.trigger()
         logging.warning('event notification sent')
+
+    @staticmethod
+    def safe_event_clone(event, alarm_gen):
+        for key, value in event.get_event_props_as_fields_dict().items():
+            if key in alarm_gen.event.__dict__.keys():
+                setattr(alarm_gen.event, key, value)
+        return alarm_gen
 
     async def get_existing_alarms(self, subscription_id):
         refresh_node = self._client.get_node('i=3875')
