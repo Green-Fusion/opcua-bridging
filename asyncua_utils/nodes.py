@@ -64,7 +64,7 @@ async def browse_nodes(node: Node, to_export=False, path=None):
             current_value = await node.get_value()
         except (BadOutOfService, BadAttributeIdInvalid, BadInternalError, BadSecurityModeInsufficient, UaError):
             current_value = None
-    type_def_id = await node.get_type_definition()
+    type_def_id = await node.read_type_definition()
 
     references = await node.get_references()
     if len(references) > 0:
