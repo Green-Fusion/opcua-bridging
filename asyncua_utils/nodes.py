@@ -8,6 +8,7 @@ from asyncua.ua.uaerrors import BadOutOfService, BadAttributeIdInvalid, BadInter
                                 BadBrowseNameDuplicated
 from asyncua.ua.status_codes import StatusCodes
 import datetime
+import asyncio
 from copy import deepcopy
 import re
 from typing import Union
@@ -154,7 +155,7 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
     node_id = NodeId()  # generate a nodeid to avoid collisions.
     nodes_dict['name'], namespace_idx = await fix_name_and_get_namespace(nodes_dict['name'], client_namespace_array,
                                                                          server)
-
+    await asyncio.sleep(0.1)
     if nodes_dict['cls'] in [1, 'Object']:
         # node is an object
 
