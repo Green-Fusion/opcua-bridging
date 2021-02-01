@@ -35,7 +35,7 @@ async def main():
     node_2_client = await client.nodes.objects.get_child(['0:TimeSeries'])
 
     client_var = await client.nodes.root.get_child(['0:Objects', '0:MyObject', '0:MyVariable'])
-    handler = SubscriptionHandler(client, server)
+    handler = await SubscriptionHandler(client, server)
 
     subscription = await client.create_subscription(5, handler)
 
