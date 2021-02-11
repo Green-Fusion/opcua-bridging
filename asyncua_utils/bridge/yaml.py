@@ -81,6 +81,7 @@ async def bridge_from_yaml(server_object, server_yaml_file):
         await apply_references(server_object, node_mapping_list, node_mapping)
         logging.info('node clone finished')
         sub_handler.subscribe_to_writes()
+        await sub_handler.start(subscription.subscription_id)
         sub_list.append({'sub_handler': sub_handler, 'subscription': subscription,
                          'downstream_client': downstream_client, 'node_mapping': node_mapping})
     return sub_list
