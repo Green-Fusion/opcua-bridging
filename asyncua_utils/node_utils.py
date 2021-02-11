@@ -25,7 +25,7 @@ def extract_node_id(node_id_str):
     elif len(int_matches) == 0:
         str_matches = re.findall(str_regex_string, node_id_str)
         if len(str_matches) == 1:
-            return str_matches
+            return str(str_matches[0])
 
     logging.warning(f"extract_node_id failed with node_id_str={node_id_str}")
     raise NotImplementedError
