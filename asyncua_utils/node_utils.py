@@ -22,4 +22,5 @@ def extract_node_id(node_id_str):
     if len(int_matches) == 1:
         return int(int_matches[0])
     else:
+        logging.warning(f"extract_node_id failed with node_id_str={node_id_str}")
         raise NotImplementedError

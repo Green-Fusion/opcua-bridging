@@ -55,6 +55,7 @@ async def bridge_from_yaml(server_object, server_yaml_file):
     :return:
     """
     specification = yaml.load(open(server_yaml_file, 'r'), Loader=yaml.SafeLoader)
+    logging.info('specification yaml loaded')
     sub_list = []
     initial_nodes = get_nodeid_list(server_object.iserver.aspace)  # needed to initialize DownstreamBridgeNodeMapping
     for downstream_opc_server in specification:
@@ -65,15 +66,20 @@ async def bridge_from_yaml(server_object, server_yaml_file):
                                                  private_key=downstream_opc_server['bridge_private_key'],
                                                  server_certificate=downstream_opc_server['server_certificate'])
         await downstream_client.connect()
+        logging.info('downstream client connected')
         node_mapping = DownstreamBridgeNodeMapping(initial_nodes)
         sub_handler = SubscriptionHandler(downstream_client, server_object, node_mapping)
         method_handler = MethodForwardingHandler(downstream_client, server_object, node_mapping)
         subscription = await downstream_client.create_subscription(5, sub_handler)
         await subscription.subscribe_events(downstream_client.nodes.server, ua.ObjectIds.OffNormalAlarmType)
+        logging.info('subscription created')
         base_object = await server_object.nodes.objects.add_object(NodeId(), downstream_opc_server['name'])
+        logging.info('node clone beginning')
         node_mapping_list = await clone_and_subscribe(downstream_client, downstream_opc_server['nodes'],
                                   base_object, sub_handler, subscription, server_object, method_handler)
+        logging.info('reference applying')
         await apply_references(server_object, node_mapping_list, node_mapping)
+        logging.info('node clone finished')
         sub_handler.subscribe_to_writes()
         sub_list.append({'sub_handler': sub_handler, 'subscription': subscription,
                          'downstream_client': downstream_client, 'node_mapping': node_mapping})
