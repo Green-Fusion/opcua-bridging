@@ -17,10 +17,15 @@ def strip_namespace(node_id_str: str):
 def extract_node_id(node_id_str):
     if node_id_str is None:
         return None
-    regex_string = "i=(\d*)"
-    int_matches = re.findall(regex_string, node_id_str)
+    int_regex_string = "i=(\d*)"
+    int_matches = re.findall(int_regex_string, node_id_str)
+    str_regex_string = 'g=(\d*)'
     if len(int_matches) == 1:
         return int(int_matches[0])
-    else:
-        logging.warning(f"extract_node_id failed with node_id_str={node_id_str}")
-        raise NotImplementedError
+    elif len(int_matches) == 0:
+        str_matches = re.findall(str_regex_string, node_id_str)
+        if len(str_matches) == 1:
+            return str_matches
+
+    logging.warning(f"extract_node_id failed with node_id_str={node_id_str}")
+    raise NotImplementedError
