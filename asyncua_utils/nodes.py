@@ -34,7 +34,7 @@ async def browse_nodes(node: Node, to_export=False, path=None):
     node_children = await node.get_children()
     if len(node_children) > 0:
         node_children_descriptions = await node.get_children_descriptions()
-        notallowed_objectids = [ua.ObjectIds.HasNotifier]
+        notallowed_objectids = [ua.ObjectIds.HasNotifier, ua.ObjectIds.HasEventSource]
 
         allowed = [child_desc.NodeId for child_desc in node_children_descriptions if
                       child_desc.ReferenceTypeId.Identifier not in notallowed_objectids]
