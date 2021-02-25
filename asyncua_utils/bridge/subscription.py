@@ -98,9 +98,9 @@ async def clone_and_subscribe(client: Client, node_dict: dict, server_node: Node
     var_nodes = [client.get_node(elem['original_id']) for elem in mapping_list if elem['type'] == 'Variable']
     sub_node_lists = [var_nodes[x:x + 50] for x in range(0, len(var_nodes), 50)]
     for idx, node_list in enumerate(sub_node_lists):
-        _logger.warning(f"carrying out data change subscription{idx}")
+        _logger.warning(f"carrying out data change subscription {idx}")
         await subscription_obj.subscribe_data_change(node_list)
-        time.sleep(1)
+        time.sleep(2)
     return mapping_list
 
 
