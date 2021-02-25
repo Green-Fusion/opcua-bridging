@@ -7,6 +7,7 @@ from asyncua_utils.bridge.alarms import AlarmHandler
 import logging
 from asyncua.common.callback import CallbackType
 import asyncua.ua.uaerrors
+import time
 
 _logger = logging.getLogger('opcua_bridge')
 
@@ -96,8 +97,10 @@ async def clone_and_subscribe(client: Client, node_dict: dict, server_node: Node
     subscribe_with_handler_from_list(sub_handler, mapping_list)
     var_nodes = [client.get_node(elem['original_id']) for elem in mapping_list if elem['type'] == 'Variable']
     sub_node_lists = [var_nodes[x:x + 50] for x in range(0, len(var_nodes), 50)]
-    for node_list in sub_node_lists:
+    for idx, node_list in enumerate(sub_node_lists):
+        _logger.warning(f"carrying out data change subscription{idx}")
         await subscription_obj.subscribe_data_change(node_list)
+        time.sleep(1)
     return mapping_list
 
 
