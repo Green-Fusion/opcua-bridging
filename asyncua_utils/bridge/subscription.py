@@ -101,7 +101,7 @@ async def clone_and_subscribe(client: Client, node_dict: dict, server_node: Node
     for idx, node_list in enumerate(sub_node_lists):
         _logger.warning(f"carrying out data change subscription {idx}")
         await subscription_obj.subscribe_data_change(node_list)
-        time.sleep(0.1)
+        time.sleep(0.5)
     return mapping_list
 
 
