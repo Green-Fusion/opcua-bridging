@@ -170,6 +170,7 @@ async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_arra
 
                 if node_type:
                     # we do this, otherwise a load of junk gets added.
+
                     await next_obj.add_reference(node_type, reftype='i=40')
                     await next_obj.delete_reference(ua.object_ids.ObjectIds.BaseObjectType, reftype='i=40')
 
@@ -266,6 +267,7 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
         new_var = await base_object.add_property(node_id, node_name, original_val, varianttype=node_type)
     else:
         new_var = await base_object.add_variable(node_id, node_name, original_val, varianttype=node_type,
-                                                 datatype=data_type)
+                                                 # datatype=data_type
+                                                 )
 
     return new_var
