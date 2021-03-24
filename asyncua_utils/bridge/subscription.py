@@ -40,6 +40,7 @@ class SubscriptionHandler:
         await self._alarm_handler.start(subscription_id)
 
     async def datachange_notification(self, node, val, data):
+        _logger.warning(f'this is happening with val {val}')
         node_id = node.nodeid.to_string()
         client_id = self._client_server_mapping.get_bridge_id(node_id)
         if client_id is None:
