@@ -238,7 +238,7 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
     if isinstance(node_type, str):
         node_type = VariantType[node_type]
 
-    if node_type in [VariantType.ExtensionObject, VariantType.Variant]:
+    if node_type in [VariantType.ExtensionObject, VariantType.Variant, VariantType.Byte]:
         return None
     elif node_dict.get('current_value'):
         original_val = node_dict['current_value']
@@ -249,7 +249,7 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
                        VariantType.Int64, VariantType.UInt64,
                        VariantType.Float, VariantType.Double]:
         original_val = 0
-    elif node_type in [VariantType.String, VariantType.Byte]:
+    elif node_type in [VariantType.String]:
         original_val = ''
     elif node_type == VariantType.LocalizedText:
         original_val = LocalizedText(text='', locale='en')
