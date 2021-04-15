@@ -15,6 +15,7 @@ services:
       - 4840
     environment:
       - OPC_PLC_URL=opc.tcp://plc:4840
+      - secure=true
       #- OPC_PLC_URL_2=opc.tcp://plc2:4840
       - WAIT_HOSTS=plc:4840 #,plc2:4840
     ports:

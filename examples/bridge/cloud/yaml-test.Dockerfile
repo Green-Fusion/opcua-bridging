@@ -23,4 +23,4 @@ RUN chmod +x /wait
 
 WORKDIR /cloud
 
-CMD /wait && python cloud/yaml-generation.py && python cloud/yaml-consumption.py
+CMD /wait && python cloud/yaml-generation.py && python cloud/yaml-consumption.py cloud_server_config_secure.yaml

@@ -23,4 +23,4 @@ RUN chmod +x /wait
 
 WORKDIR /server
 
-CMD /wait && python PLC/server.py PLC_server_config.yaml
+CMD /wait && python PLC/server.py PLC_server_config-insecure.yaml

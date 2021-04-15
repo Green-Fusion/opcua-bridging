@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  cloud:
+    build:
+      dockerfile: examples/bridge/cloud/yaml-test-insecure.Dockerfile
+      context: ../..
+    expose:
+      - 4840
+    environment:
+      - OPC_PLC_URL=opc.tcp://plc:4840
+      #- OPC_PLC_URL_2=opc.tcp://plc2:4840
+      - WAIT_HOSTS=plc:4840 #,plc2:4840
+    ports:
+      - '4840:4840'
+    volumes:
+      - './test_yaml:/appdata/test_yaml'
+  plc:
+    build:
+      dockerfile: examples/bridge/PLC/insecure.Dockerfile
+      context: ../..
+    expose:
+      - 4840
+    ports:
+      - '4841:4840'

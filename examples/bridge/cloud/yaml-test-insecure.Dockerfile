@@ -23,4 +23,4 @@ RUN chmod +x /wait
 
 WORKDIR /cloud
 
-CMD /wait && sleep 5 && python cloud/forwarding-service.py
+CMD /wait && python cloud/yaml-generation.py && python cloud/yaml-consumption.py cloud_server_config_insecure.yaml

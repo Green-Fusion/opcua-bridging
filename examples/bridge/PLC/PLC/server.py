@@ -44,7 +44,8 @@ async def generate_alarm(alarm_gen, active):
 
 
 async def main():
-    server = await server_from_yaml('/server/PLC_server_config.yaml')
+    import sys
+    server = await server_from_yaml(sys.argv[1])
 
     idx = 0
 

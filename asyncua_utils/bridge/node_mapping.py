@@ -20,7 +20,7 @@ class DownstreamBridgeNodeMapping:
         logging.warning('type cloning done')
 
     def add_connection(self, downstream_node_id, bridge_node_id):
-        downstream_node_id = strip_namespace(downstream_node_id)
+        downstream_node_id = downstream_node_id
         if downstream_node_id in self._downstream_bridge_mapping.keys():
             _logger.warning(f"node {downstream_node_id} being assigned multiple times.")
         self._downstream_bridge_mapping[downstream_node_id] = bridge_node_id
@@ -35,5 +35,5 @@ class DownstreamBridgeNodeMapping:
 
     def get_bridge_id(self, downstream_node_id):
 
-        downstream_node_id = strip_namespace(downstream_node_id)
+        downstream_node_id = downstream_node_id
         return self._downstream_bridge_mapping.get(downstream_node_id)
