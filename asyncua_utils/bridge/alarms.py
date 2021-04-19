@@ -58,6 +58,7 @@ async def add_refresh_method(server_object: Server, sub_list):
 
     @uamethod
     def full_refresh(parent, subscription_id):
+        logging.warning('full_refresh happening')
         for sub in sub_list:
             sub['sub_handler'].refresh_alarms()
 
