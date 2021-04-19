@@ -39,6 +39,9 @@ class SubscriptionHandler:
     async def start(self, subscription_id=None):
         await self._alarm_handler.start(subscription_id)
 
+    async def refresh_alarms(self, subscription_id=None):
+        await self._alarm_handler.get_existing_alarms(subscription_id)
+
     async def datachange_notification(self, node, val, data):
         _logger.debug(f'datachange_notification with node {node} val {val}')
         node_id = node.nodeid.to_string()

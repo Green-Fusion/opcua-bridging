@@ -3,6 +3,7 @@ from asyncua.ua import Variant, VariantType, uaerrors
 from asyncua_utils.bridge.node_mapping import DownstreamBridgeNodeMapping
 from asyncua.common.events import Event
 from asyncua_utils.node_utils import extract_node_id
+from asyncua.common.methods import uamethod
 import pprint as pp
 import logging
 
@@ -38,7 +39,10 @@ class AlarmHandler:
                 setattr(alarm_gen.event, key, value)
         return alarm_gen
 
-    async def get_existing_alarms(self, subscription_id):
+    async def get_existing_alarms(self, subscription_id=None):
+
+        if subscription_id is None:
+            subscription_id = self.subscription_id
         refresh_node = self._client.get_node('i=3875')
         condition_node = self._client.get_node('i=2782')
 
@@ -51,4 +55,11 @@ class AlarmHandler:
 
 async def add_refresh_method(server_object: Server, sub_list):
     await server_object.get_node('i=3875').delete()
-    await server_object.nodes.objects.add_method('i=3875', ua.QualifiedName('ServerMethod', 2), lambda l: 6, [ua.VariantType.Int64], [ua.VariantType.Int64])
+
+    @uamethod
+    def full_refresh(parent, subscription_id):
+        for sub in sub_list:
+            sub['sub_handler'].refresh_alarms()
+
+    await server_object.get_node('i=2782').add_method('i=3875', ua.QualifiedName('ConditionRefresh', 2), full_refresh,
+                                                 [ua.VariantType.Int64], [])
