@@ -12,6 +12,7 @@ from asyncua_utils.bridge import clone_and_subscribe
 from asyncua.crypto.security_policies import SecurityPolicyBasic256Sha256
 from asyncua_utils.bridge.method_forwarding import MethodForwardingHandler
 from asyncua_utils.node_utils import extract_node_id
+from asyncua_utils.bridge.alarms import add_refresh_method
 from asyncua.server.address_space import AddressSpace
 from asyncua import ua
 from tqdm import tqdm
@@ -84,6 +85,7 @@ async def bridge_from_yaml(server_object, server_yaml_file):
         await sub_handler.start(subscription.subscription_id)
         sub_list.append({'sub_handler': sub_handler, 'subscription': subscription,
                          'downstream_client': downstream_client, 'node_mapping': node_mapping})
+    await add_refresh_method(server_object, sub_list)
     return sub_list
 
 
