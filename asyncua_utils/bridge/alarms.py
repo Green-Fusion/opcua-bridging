@@ -50,5 +50,5 @@ class AlarmHandler:
 
 
 async def add_refresh_method(server_object: Server, sub_list):
-    await server_object.get_node('i=3875').delete()
+    await (await server_object.get_node('i=3875')).delete()
     await server_object.nodes.objects.add_method('i=3875', ua.QualifiedName('ServerMethod', 2), lambda l: 6, [ua.VariantType.Int64], [ua.VariantType.Int64])
