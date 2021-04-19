@@ -57,10 +57,10 @@ async def add_refresh_method(server_object: Server, sub_list):
     await server_object.get_node('i=3875').delete()
 
     @uamethod
-    def full_refresh(parent, subscription_id):
+    async def full_refresh(parent, subscription_id):
         logging.warning('full_refresh happening')
         for sub in sub_list:
-            sub['sub_handler'].refresh_alarms()
+            await sub['sub_handler'].refresh_alarms()
 
     await server_object.get_node('i=2782').add_method('i=3875', ua.QualifiedName('ConditionRefresh', 2), full_refresh,
                                                  [ua.VariantType.Int64], [])
