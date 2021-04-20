@@ -27,7 +27,7 @@ class AlarmHandler:
     async def event_notification(self, event: Event):
         alarm = self._server.get_node(ua.NodeId(10637))
         alarm_gen = await self._server.get_event_generator(alarm,
-                                                           emitting_node=ua.ObjectIds.Server,
+                                                           emitting_node=event.SourceNode,
                                                            notifier_path=[ua.ObjectIds.Server])
         # event.SourceNode = self._server.nodes.server.nodeid
         event.Message = ua.LocalizedText('hello from bridge')
