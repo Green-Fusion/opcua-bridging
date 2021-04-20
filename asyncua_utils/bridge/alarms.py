@@ -28,7 +28,9 @@ class AlarmHandler:
         alarm_gen = await self._server.get_event_generator(self._server.get_node(event.EventType),
                                                            emitting_node=ua.ObjectIds.Server,
                                                            notifier_path=[ua.ObjectIds.Server])
+        event.SourceNode = self._server.nodes.server.nodeid
         alarm_gen.event = event
+
         # alarm_gen = self.safe_event_clone(event, alarm_gen)
         await alarm_gen.trigger()
 
