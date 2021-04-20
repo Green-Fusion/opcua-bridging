@@ -31,9 +31,9 @@ class AlarmHandler:
                                                            notifier_path=[ua.ObjectIds.Server])
         event.SourceNode = self._server.nodes.server.nodeid
         event.Message = ua.LocalizedText('hello from bridge')
-        alarm_gen.event = event
+        # alarm_gen.event = event
 
-        # alarm_gen = self.safe_event_clone(event, alarm_gen)
+        alarm_gen = self.safe_event_clone(event, alarm_gen)
         await alarm_gen.trigger()
 
     @staticmethod
