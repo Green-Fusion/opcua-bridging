@@ -18,9 +18,11 @@ from asyncua import ua
 from tqdm import tqdm
 
 
-async def produce_server_dict(client_node):
-    node_dict = await browse_nodes(client_node, to_export=True)
-    return node_dict
+async def produce_server_dict(client_nodes: list):
+    node_list = []
+    for node in client_nodes:
+        node_list.append(await browse_nodes(node, to_export=True))
+    return node_list
 
 
 async def cloned_namespace_dict(connection_dict):
