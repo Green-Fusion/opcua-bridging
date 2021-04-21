@@ -78,10 +78,12 @@ async def bridge_from_yaml(server_object, server_yaml_file):
         logging.info('subscription created')
         base_object = await server_object.nodes.objects.add_object(NodeId(), downstream_opc_server['name'])
         logging.info('node clone beginning')
-        node_mapping_list = await clone_and_subscribe(downstream_client, downstream_opc_server['nodes'],
-                                  base_object, sub_handler, subscription, server_object, method_handler)
-        logging.info('reference applying')
-        await apply_references(server_object, node_mapping_list, node_mapping)
+        for node in downstream_opc_server['nodes']:
+
+            node_mapping_list = await clone_and_subscribe(downstream_client, node,
+                                      base_object, sub_handler, subscription, server_object, method_handler)
+            logging.info('reference applying')
+            await apply_references(server_object, node_mapping_list, node_mapping)
         logging.info('node clone finished')
         sub_handler.subscribe_to_writes()
         await sub_handler.start(subscription.subscription_id)
