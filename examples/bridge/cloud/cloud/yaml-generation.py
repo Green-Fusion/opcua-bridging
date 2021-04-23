@@ -38,7 +38,7 @@ async def main():
     node_1_client = client.nodes.objects
     # node_2_client = client2.nodes.objects
 
-    bridge_dict = {'nodes': node_1_client, 'name': 'plc_1', 'url': PLC_url}
+    bridge_dict = {'nodes': [node_1_client], 'name': 'plc_1', 'url': PLC_url}
     if secure:
         bridge_dict.update({'bridge_certificate': cloud_cert,
                  'bridge_private_key': cloud_private_key, 'server_certificate': server_cert})

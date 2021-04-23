@@ -107,6 +107,6 @@ async def test_alarm_forwarding(client_cloud: Client):
         subscription = await client_cloud.create_subscription(5, sub_handler)
         await subscription.subscribe_events(client_cloud.nodes.server, ua.ObjectIds.OffNormalAlarmType)
 
-        await asyncio.sleep(2)
+        await asyncio.sleep(5)
 
         assert sub_handler.alert_received

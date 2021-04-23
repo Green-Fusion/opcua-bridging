@@ -25,7 +25,10 @@ def func(parent, variant: Variant):
     return [ua.Variant(ret, ua.VariantType.Boolean)]
 
 
-async def generate_alarm(alarm_gen, active):
+async def generate_alarm(server, active):
+    alarm = server.get_node(ua.NodeId(10637))
+    alarm_gen = await server.get_event_generator(alarm, server.nodes.server,
+                                                           notifier_path=[ua.ObjectIds.Server])
     alarm_gen.event.ConditionName = 'Example Alarm1'
     alarm_gen.event.Message = ua.LocalizedText("hello from python")
     alarm_gen.event.Severity = 500
@@ -40,6 +43,7 @@ async def generate_alarm(alarm_gen, active):
         alarm_gen.event.Retain = False
         alarm_gen.event.ActiveState = ua.LocalizedText('Inactive', 'en')
         setattr(alarm_gen.event, 'ActiveState/Id', False)
+    logging.warning('sending alarm!')
     await alarm_gen.trigger()
 
 
@@ -73,14 +77,10 @@ async def main():
     await cntrl_3.set_writable()
     await ts_store.propagate()
 
-    alarm = server.get_node(ua.NodeId(10637))
-    alarm_gen = await server.get_event_generator(alarm, server.nodes.server,
-                                                           notifier_path=[ua.ObjectIds.Server])
-
     _logger.info('Starting server!')
     async with server:
         while True:
-            await generate_alarm(alarm_gen, True)
+            await generate_alarm(server, True)
             await asyncio.sleep(1)
             # old_val = await myvar.read_value()
             # count = old_val + 0.1

@@ -75,6 +75,7 @@ async def browse_nodes(node: Node, to_export=False, path=None):
             'target': ref.NodeId.to_string()
 
         } for ref in references]
+        references = [ref for ref in references if not ((ref['refTypeId'] == 'i=47') and (ref['isForward'] == False))]
     else:
         references = None
 
