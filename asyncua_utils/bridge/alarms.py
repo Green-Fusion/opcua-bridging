@@ -28,7 +28,7 @@ class AlarmHandler:
         alarm = self._server.get_node(ua.NodeId(10637))
         alarm_gen = await self._server.get_event_generator(alarm,
                                                            emitting_node=self._node_mapping.get_bridge_id(
-                                                               event.SourceNode.nodeid.to_string()),
+                                                               event.SourceNode.to_string()),
                                                            notifier_path=[ua.ObjectIds.Server])
         # event.SourceNode = self._server.nodes.server.nodeid
         event.Message = ua.LocalizedText('hello from bridge')
