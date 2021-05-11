@@ -26,13 +26,14 @@ class AlarmHandler:
 
     async def event_notification(self, event: Event):
         alarm = self._server.get_node(ua.NodeId(10637))
-        bridge_id = ua.NodeId(self._node_mapping.get_bridge_id(event.SourceNode.to_string()))
+        source_id_str = event.SourceNode.to_string()
+        bridge_id = ua.NodeId(self._node_mapping.get_bridge_id(source_id_str))
+        logging.warning(f'bridge_id={bridge_id.to_string()};source_id={source_id_str}')
         alarm_gen = await self._server.get_event_generator(alarm,
                                                            emitting_node=bridge_id,
                                                            notifier_path=[ua.ObjectIds.Server])
         # event.SourceNode = self._server.nodes.server.nodeid
         event.Message = ua.LocalizedText('hello from bridge')
-        ua.Node
 
         alarm_gen = self.safe_event_clone(event, alarm_gen)
         await alarm_gen.trigger()
