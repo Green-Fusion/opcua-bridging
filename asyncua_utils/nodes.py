@@ -239,7 +239,7 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
     if isinstance(node_type, str):
         node_type = VariantType[node_type]
 
-    if node_type in [VariantType.ExtensionObject, VariantType.Variant, VariantType.Byte]:
+    if node_type in [VariantType.ExtensionObject, VariantType.Variant, VariantType.Byte, VariantType.ByteString]:
         return None
     elif node_dict.get('current_value'):
         original_val = node_dict['current_value']
