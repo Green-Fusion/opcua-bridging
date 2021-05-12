@@ -32,6 +32,7 @@ class AlarmHandler:
         alarm = self._server.get_node(ua.NodeId(10637))
         source_id_str = event.SourceNode.to_string()
         bridge_id = ua.NodeId.from_string(self._node_mapping.get_bridge_id(source_id_str))
+        bridge_id = ua.NodeId.from_string('i=2253')
         logging.warning(f'bridge_id={bridge_id.to_string()};source_id={source_id_str}')
         notifier_path = self._get_notifier_path(bridge_id)
 
