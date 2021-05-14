@@ -26,7 +26,8 @@ class AlarmHandler:
 
     async def _get_notifier_path(self, bridge_id: ua.NodeId):
         bridge_node = self._server.get_node(bridge_id)
-        path = await bridge_node.get_path()
+        path = [self._server.nodes.server.nodeid]
+        path.extend(await bridge_node.get_path())
         logging.warning(path)
         return path
 
