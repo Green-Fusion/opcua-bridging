@@ -46,6 +46,7 @@ class AlarmHandler:
         event.Message = ua.LocalizedText('hello from bridge')
 
         alarm_gen = self.safe_event_clone(event, alarm_gen)
+        logging.warning(alarm_gen.event)
         await alarm_gen.trigger()
 
     @staticmethod
