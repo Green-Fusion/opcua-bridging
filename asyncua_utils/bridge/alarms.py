@@ -24,9 +24,9 @@ class AlarmHandler:
             subscription_id = self.subscription_id
         await self.get_existing_alarms(subscription_id)
 
-    def _get_notifier_path(self, bridge_id: ua.NodeId):
+    async def _get_notifier_path(self, bridge_id: ua.NodeId):
         bridge_node = self._server.get_node(bridge_id)
-        path = bridge_node.get_path()
+        path = await bridge_node.get_path()
         logging.warning(path)
         return path
 
@@ -36,7 +36,7 @@ class AlarmHandler:
         bridge_id = ua.NodeId.from_string(self._node_mapping.get_bridge_id(source_id_str))
         # bridge_id = ua.NodeId.from_string('i=2253') # TODO: we need to get this coming from the right node, i think?
         logging.warning(f'bridge_id={bridge_id.to_string()};source_id={source_id_str}')
-        notifier_path = self._get_notifier_path(bridge_id)
+        notifier_path = await self._get_notifier_path(bridge_id)
 
         alarm_gen = await self._server.get_event_generator(alarm,
                                                            emitting_node=bridge_id,
