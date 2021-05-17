@@ -45,15 +45,23 @@ class AlarmHandler:
         # event.SourceNode = self._server.nodes.server.nodeid
         event.Message = ua.LocalizedText('hello from bridge')
 
-        alarm_gen = self.safe_event_clone(event, alarm_gen)
+        alarm_gen = self._safe_event_clone(event, alarm_gen)
+
         logging.warning(alarm_gen.event)
         await alarm_gen.trigger()
 
-    @staticmethod
-    def safe_event_clone(event, alarm_gen):
+    def _map_nodes_to_brdge(self, alarm_gen):
+
+        return alarm_gen
+
+    def _safe_event_clone(self, event, alarm_gen):
         for key, value in event.get_event_props_as_fields_dict().items():
             if key in alarm_gen.event.__dict__.keys():
+                logging.warning(
+                    value
+                )
                 setattr(alarm_gen.event, key, value)
+
         return alarm_gen
 
     async def get_existing_alarms(self, subscription_id=None):
