@@ -53,7 +53,7 @@ class AlarmHandler:
     def _safe_event_clone(self, event, alarm_gen):
         for key, value in event.get_event_props_as_fields_dict().items():
             if key in alarm_gen.event.__dict__.keys():
-                if value.type == VariantType.NodeId:
+                if value.VariantType == VariantType.NodeId:
                     logging.warning('happening')
                     value.type = self._node_mapping.get_bridge_id(value.type)
                 setattr(alarm_gen.event, key, value)
