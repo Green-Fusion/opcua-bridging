@@ -54,8 +54,9 @@ class AlarmHandler:
         for key, value in event.get_event_props_as_fields_dict().items():
             if key in alarm_gen.event.__dict__.keys():
                 if value.VariantType == VariantType.NodeId and value.Value is not None:
-                    logging.warning('happening')
-                    value.Value = self._node_mapping.get_bridge_id(value.Value)
+                    new_value = self._node_mapping.get_bridge_id(value.Value)
+                    logging.warning(f'key:{key}, old_value:{value.Value}, new_value:{new_value}')
+                    value.Value = new_value
                 setattr(alarm_gen.event, key, value)
 
         return alarm_gen
