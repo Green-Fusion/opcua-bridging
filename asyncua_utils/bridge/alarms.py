@@ -55,7 +55,7 @@ class AlarmHandler:
             if key in alarm_gen.event.__dict__.keys():
                 if value.VariantType == VariantType.NodeId:
                     logging.warning('happening')
-                    value.type = self._node_mapping.get_bridge_id(value.type)
+                    value.type = self._node_mapping.get_bridge_id(value.Value)
                 setattr(alarm_gen.event, key, value)
 
         return alarm_gen
