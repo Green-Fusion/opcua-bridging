@@ -33,7 +33,10 @@ class DownstreamBridgeNodeMapping:
 
     def get_bridge_id(self, downstream_node_id):
         if isinstance(downstream_node_id, ua.NodeId):
-            bridge_id = self._downstream_bridge_mapping.get(downstream_node_id.to_string())
+            downstream_string = downstream_node_id.to_string()
+            if downstream_string == 'i=0':
+                return ua.NodeId.from_string('i=0')  # weird case where things have i=0 type definition.
+            bridge_id = self._downstream_bridge_mapping.get(downstream_string)
             if bridge_id:
                 return ua.NodeId.from_string(bridge_id)
             else:
