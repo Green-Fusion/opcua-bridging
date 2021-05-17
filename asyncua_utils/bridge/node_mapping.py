@@ -33,6 +33,11 @@ class DownstreamBridgeNodeMapping:
 
     def get_bridge_id(self, downstream_node_id):
         if isinstance(downstream_node_id, ua.NodeId):
-            return ua.NodeId.from_string(self._downstream_bridge_mapping.get(downstream_node_id.to_string()))
+            bridge_id = self._downstream_bridge_mapping.get(downstream_node_id.to_string())
+            if bridge_id:
+                return ua.NodeId.from_string(bridge_id)
+            else:
+                logging.warning(f"Node Id {downstream_node_id} not found on the bridge")
+                return None
         else:
             return self._downstream_bridge_mapping.get(downstream_node_id)
