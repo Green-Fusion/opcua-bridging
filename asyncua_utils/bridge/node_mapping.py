@@ -32,6 +32,7 @@ class DownstreamBridgeNodeMapping:
         return keys[0]
 
     def get_bridge_id(self, downstream_node_id):
-        if isinstance(downstream_node_id, ua.NodeId)
+        if isinstance(downstream_node_id, ua.NodeId):
             return ua.NodeId.from_string(self._downstream_bridge_mapping.get(downstream_node_id.to_string()))
-        return self._downstream_bridge_mapping.get(downstream_node_id)
+        else:
+            return self._downstream_bridge_mapping.get(downstream_node_id)
