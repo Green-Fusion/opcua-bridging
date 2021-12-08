@@ -149,15 +149,13 @@ def check_if_object_is_from_module(obj_val, module):
 
 
 async def clone_nodes(nodes_dict: dict, base_object: Node, client_namespace_array: list, server: Server,
-                      method_forwarding=None):
+                      method_forwarding=None, same_node_id=False):
     mapping_list = []
     node_id = NodeId()  # generate a nodeid to avoid collisions.
     nodes_dict['name'], namespace_idx = await fix_name_and_get_namespace(nodes_dict['name'], client_namespace_array,
-                                                                         server)
-
+                                                                        server)
     if nodes_dict['cls'] in [1, 'Object']:
         # node is an object
-
         try:
             node_type = nodes_dict.get('type_definition')
             if extract_node_id(node_type) == ua.object_ids.ObjectIds.FolderType:
@@ -251,7 +249,7 @@ async def add_variable(base_object: Node, node_dict: dict, node_id: Union[str, N
     elif node_type in [VariantType.String, VariantType.Byte]:
         original_val = ''
     elif node_type == VariantType.LocalizedText:
-        original_val = LocalizedText(text='', locale='en')
+        original_val = LocalizedText(Text='', Locale='en')
     elif node_type == VariantType.DateTime:
         original_val = datetime.datetime.today()
     elif node_type == VariantType.StatusCode:
