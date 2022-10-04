@@ -28,10 +28,13 @@ async def cloned_namespace_dict(connection_dict):
 
 
 async def produce_full_bridge_yaml(connection_list, output_file):
+    print("- will produce_full_bridge_yaml")
     full_dict = []
     for connection in connection_list:
+        print("- append connection to dict: ", connection)
         full_dict.append(await cloned_namespace_dict(connection))
     yaml.dump(full_dict, open(output_file, 'w'))
+    print("- successfully dumped yaml file")
 
 
 async def add_server_as_notifier(downstream_server: Client, bridge_server: Server,
