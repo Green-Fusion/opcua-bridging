@@ -19,6 +19,7 @@ _logger = logging.getLogger('asyncua')
 
 
 async def browse_nodes(node: Node, to_export=False, path=None):
+    print("- browse_nodes")
     """
     Build a nested node tree dict by recursion (filtered by OPC UA objects and variables).
     """
@@ -31,6 +32,7 @@ async def browse_nodes(node: Node, to_export=False, path=None):
     else:
         path.append(node_name)
 
+    print("- browse_nodes: will get children")
     node_children = await node.get_children()
     if len(node_children) > 0:
         node_children_descriptions = await node.get_children_descriptions()
@@ -111,7 +113,7 @@ async def browse_nodes(node: Node, to_export=False, path=None):
                 del output['current_value']
             elif check_if_object_is_from_module(output['current_value'], uuid):
                 output['current_value'] = str(output['current_value'])
-
+    print("- browse_nodes: return output")
     return output
 
 

@@ -18,11 +18,13 @@ from tqdm import tqdm
 
 
 async def produce_server_dict(client_node):
+    print("- produce_server_dict")
     node_dict = await browse_nodes(client_node, to_export=True)
     return node_dict
 
 
 async def cloned_namespace_dict(connection_dict):
+    print("- cloned_namespace_dict")
     connection_dict['nodes'] = await produce_server_dict(connection_dict['nodes'])
     return connection_dict
 
