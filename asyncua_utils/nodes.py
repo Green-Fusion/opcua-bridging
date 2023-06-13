@@ -19,7 +19,7 @@ _logger = logging.getLogger('asyncua')
 
 
 async def browse_nodes(node: Node, to_export=False, path=None):
-    print("- browse_nodes")
+    print("- browse_nodes", node, path)
     """
     Build a nested node tree dict by recursion (filtered by OPC UA objects and variables).
     """
